@@ -30,24 +30,57 @@ val poppinsFamily = FontFamily(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    bodyLarge = TextStyle(
+
+    headlineLarge = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 40.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 44.sp
+    ),
+
+    headlineMedium = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 40.sp
+    ),
+
+    labelLarge = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
+    ),
+
+    bodyMedium = TextStyle(
         fontFamily = poppinsFamily,
         fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
+    ),
+
+    bodyLarge = TextStyle(
+        fontFamily = poppinsFamily,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
     titleLarge = TextStyle(
         fontFamily = poppinsFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 24.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = poppinsFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
+        fontSize = 8.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
     )

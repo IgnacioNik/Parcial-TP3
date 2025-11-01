@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">My Application</string>
+
+    <string name="finwise_app_name">FinWise</string>
+    <string name="welcome_tagline">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</string>
+    <string name="log_in_button">Log In</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="forgot_password_button">Forgot Password?</string>
+
+    <string name="logo_content_description">FinWise Logo</string>
+
+    <string name="onboarding_title_1_line_1">Welcome To</string>
+    <string name="onboarding_title_1_line_2">Expense Manager</string>
+    <string name="onboarding_title_2_line_1">¿Are You Ready To </string>
+    <string name="onboarding_title_2_line_2">Take Control Of </string>
+    <string name ="onboarding_title_2_line_3">Your Finances?</string>
+    <string name="next_button">Next</string>
+
+    <string name="onboarding_image_1_desc">A hand holding several coins</string>
+    <string name="onboarding_image_2_desc">A hand holding a phone with a success checkmark</string>
+
 </resources>
