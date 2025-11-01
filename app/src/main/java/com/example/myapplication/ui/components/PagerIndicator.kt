@@ -21,12 +21,12 @@ fun PagerIndicator(
     pageCount: Int,
     currentPage: Int,
     modifier: Modifier = Modifier,
-    activeColor: Color, // Color del punto activo (sólido)
-    inactiveBorderColor: Color // Color del BORDE del punto inactivo
+    activeColor: Color,
+    inactiveBorderColor: Color
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp) // Espacio entre los puntos
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         repeat(pageCount) { index ->
 
@@ -34,17 +34,17 @@ fun PagerIndicator(
 
             Box(
                 modifier = Modifier
-                    .size(10.dp) // Tamaño del punto
+                    .size(10.dp)
                     .clip(CircleShape)
-                    .then( // .then nos deja aplicar modificadores condicionalmente
+                    .then(
                         if (isSelected) {
-                            // --- PUNTO ACTIVO ---
+
                             Modifier.background(activeColor)
                         } else {
-                            // --- PUNTO INACTIVO ---
+
                             Modifier
-                                .background(AppTextWhite) // Fondo blanco
-                                .border(1.dp, inactiveBorderColor, CircleShape) // Borde
+                                .background(AppTextWhite)
+                                .border(1.dp, inactiveBorderColor, CircleShape)
                         }
                     )
             )

@@ -27,8 +27,8 @@ import kotlinx.coroutines.delay
 fun SplashScreenContent(onSplashFinished: () -> Unit) {
 
     LaunchedEffect(Unit) {
-        delay(3000) // Espera 3 segundos
-        onSplashFinished() // Llama al lambda que le pasamos
+        delay(3000)
+        onSplashFinished()
     }
 
     Surface(

@@ -31,7 +31,7 @@ import com.example.myapplication.R
 import com.example.myapplication.ui.components.PagerIndicator
 import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
-import com.example.myapplication.ui.theme.AppGreenCircleBg
+import com.example.myapplication.ui.theme.AppGreenLight
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.AppTextWhite
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -39,37 +39,37 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(onNavigateToWelcome: () -> Unit) {
-    // El PagerState controla en qué página estamos (tenemos 2 páginas)
+
     val pagerState = rememberPagerState { 2 }
-    val scope = rememberCoroutineScope() // Para animar el scroll
+    val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize().background(AppGreen)) {
 
-        // El Pager que contiene las páginas que se deslizan
+
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            // Muestra la página correspondiente
+
             OnboardingPage(page = page)
         }
 
-        // --- Controles (Indicador de puntos y botón "Next") ---
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 64.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Indicador de puntos (Dot indicator)
+
             TextButton(
                 onClick = {
                     scope.launch {
                         if (pagerState.currentPage < 1) {
-                            // Si estamos en la página 0, animamos a la página 1
+
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
-                            // Si estamos en la última página (1), navegamos a la app
+
                             onNavigateToWelcome()
                         }
                     }
@@ -82,15 +82,15 @@ fun OnboardingScreen(onNavigateToWelcome: () -> Unit) {
                 )
             }
 
-            // 2. ESPACIO
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 3. PUNTOS
+
             PagerIndicator(
                 pageCount = 2,
                 currentPage = pagerState.currentPage,
-                activeColor = AppGreen, // El punto activo sigue siendo verde sólido
-                inactiveBorderColor = AppTextDark // El borde inactivo es el verde oscuro
+                activeColor = AppGreen,
+                inactiveBorderColor = AppTextDark
             )
         }
     }
@@ -101,11 +101,11 @@ fun OnboardingScreen(onNavigateToWelcome: () -> Unit) {
  */
 @Composable
 fun OnboardingPage(page: Int) {
-    // Decide qué imagen mostrar
+
     val imageRes = if (page == 0) {
-        R.drawable.ic_onboarding_a // (la mano con monedas)
+        R.drawable.ic_onboarding_a
     } else {
-        R.drawable.ic_onboarding_b // (la mano con el teléfono)
+        R.drawable.ic_onboarding_b
     }
 
     val imageDesc = if (page == 0) {
@@ -116,34 +116,34 @@ fun OnboardingPage(page: Int) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        // --- Parte Superior (Verde) ---
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.3f), // Ocupa el 40% superior
+                .weight(0.3f),
             contentAlignment = Alignment.Center
         ) {
-            // --- Lógica de Títulos ---
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 if (page == 0) {
-                    // --- Pantalla 2-A ---
+
                     Text(
                         text = stringResource(R.string.onboarding_title_1_line_1),
-                        style = MaterialTheme.typography.titleLarge, // Estilo más chico
+                        style = MaterialTheme.typography.titleLarge,
                         color = AppTextDark,
                         textAlign = TextAlign.Center
                     )
                     Text(
                         text = stringResource(R.string.onboarding_title_1_line_2),
-                        style = MaterialTheme.typography.titleLarge, // Estilo más grande
+                        style = MaterialTheme.typography.titleLarge,
                         color = AppTextDark,
                         textAlign = TextAlign.Center
                     )
                 } else {
-                    // --- Pantalla 2-B ---
+
                     Text(
                         text = stringResource(R.string.onboarding_title_2_line_1),
-                        // Usamos un estilo más chico que displaySmall para que entre bien
+
                         style = MaterialTheme.typography.titleLarge,
                         color = AppTextDark,
                         textAlign = TextAlign.Center,
@@ -151,7 +151,7 @@ fun OnboardingPage(page: Int) {
                     )
                     Text(
                         text = stringResource(R.string.onboarding_title_2_line_2),
-                        // Usamos un estilo más chico que displaySmall para que entre bien
+
                         style = MaterialTheme.typography.titleLarge,
                         color = AppTextDark,
                         textAlign = TextAlign.Center,
@@ -159,7 +159,7 @@ fun OnboardingPage(page: Int) {
                     )
                     Text(
                         text = stringResource(R.string.onboarding_title_2_line_3),
-                        // Usamos un estilo más chico que displaySmall para que entre bien
+
                         style = MaterialTheme.typography.titleLarge,
                         color = AppTextDark,
                         textAlign = TextAlign.Center,
@@ -169,7 +169,7 @@ fun OnboardingPage(page: Int) {
             }
         }
 
-        // --- Parte Inferior (Blanca con bordes redondeados) ---
+
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -180,32 +180,32 @@ fun OnboardingPage(page: Int) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(bottom = 80.dp), // Padding para dejar espacio a los controles
+                    .padding(bottom = 80.dp),
                 contentAlignment = Alignment.Center
             ) {
 
-                // --- CAMBIO PRINCIPAL: CÍRCULO DE FONDO ---
+
                 Box(
                     contentAlignment = Alignment.Center
                 ) {
 
-                    // 1. EL CÍRCULO (VA AL FONDO)
+
                     Box(
                         modifier = Modifier
-                            .size(220.dp) // <-- El círculo es más pequeño
-                            .background(AppGreenCircleBg, shape = CircleShape)
+                            .size(220.dp)
+                            .background(AppGreenLight, shape = CircleShape)
                     )
 
-                    // 2. LA IMAGEN (VA ENCIMA)
+
                     Image(
                         painter = painterResource(id = imageRes),
                         contentDescription = imageDesc,
-                        modifier = Modifier.size(250.dp) // <-- La imagen es más grande
+                        modifier = Modifier.size(250.dp)
                     )
                 }
-                // ---------------------------------
+
             }
-                // ------------------------------------------
+
         }
     }
 }

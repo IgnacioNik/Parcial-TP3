@@ -41,7 +41,7 @@ fun WelcomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 80.dp),
+                .padding(horizontal = 32.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -66,6 +66,7 @@ fun WelcomeScreen(
 
             PrimaryButton(
                 text = stringResource(R.string.log_in_button),
+                modifier = Modifier.padding(horizontal = 40.dp),
                 onClick = onLoginClick
             )
 
@@ -73,6 +74,7 @@ fun WelcomeScreen(
 
             SecondaryButton(
                 text = stringResource(R.string.sign_up_button),
+                modifier = Modifier.padding(horizontal = 40.dp),
                 onClick = onRegisterClick
             )
 
@@ -81,7 +83,7 @@ fun WelcomeScreen(
             TextLinkButton(
                 text = stringResource(R.string.forgot_password_button),
                 onClick = {
-                    //Toast.makeText(context, context.getString(R.string.toast_forgot_password_clicked), Toast.LENGTH_SHORT).show()
+                    // Acción para "Olvidé mi contraseña"
                 }
             )
             Spacer(modifier = Modifier.height(32.dp))

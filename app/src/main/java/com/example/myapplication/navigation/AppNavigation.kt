@@ -1,39 +1,55 @@
 package com.example.myapplication.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-//import com.example.myapplication.ui.screens.LoginScreen // Importa tus pantallas
-import com.example.myapplication.ui.screens.OnboardingScreen
-//import com.example.myapplication.ui.screens.RegisterScreen
-import com.example.myapplication.ui.screens.SplashScreenContent
-import com.example.myapplication.ui.screens.WelcomeScreen // Asumiré que renombraste tu Composable de LaunchScreenB
+import com.example.myapplication.ui.screens.*
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val view = LocalView.current
+    val window = (view.context as? android.app.Activity)?.window
+
+    LaunchedEffect(currentRoute) {
+        if (window != null) {
+            val isLight = when (currentRoute) {
+                Screen.Welcome.route -> true
+                else -> false
+            }
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isLight
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route // Empezamos por el Splash
+        startDestination = Screen.Splash.route
     ) {
-        // Ruta para el Splash Screen
+
         composable(Screen.Splash.route) {
             SplashScreenContent(
                 onSplashFinished = {
-                    // Cuando el splash termine, navega a Onboarding
                     navController.navigate(Screen.Onboarding.route) {
-                        // Limpia el stack para que el usuario no pueda "volver" al splash
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 }
             )
         }
 
-        // Ruta para el Onboarding
+
         composable(Screen.Onboarding.route) {
-            OnboardingScreen(
+           OnboardingScreen(
                 onNavigateToWelcome = {
                     navController.navigate(Screen.Welcome.route) {
                         popUpTo(Screen.Onboarding.route) { inclusive = true }
@@ -42,7 +58,6 @@ fun AppNavigation() {
             )
         }
 
-        // Ruta para la pantalla de Bienvenida (ex LaunchScreenB)
         composable(Screen.Welcome.route) {
             WelcomeScreen(
                 onLoginClick = { navController.navigate(Screen.Login.route) },
@@ -50,23 +65,51 @@ fun AppNavigation() {
             )
         }
 
-        // Ruta para el Login
-//        composable(Screen.Login.route) {
-//            // Asumiendo que tu LoginScreen tiene un lambda para volver atrás
-//            LoginScreen(
-//                onBackClick = { navController.popBackStack() }
-//                // ...otros lambdas para onLoginSuccess, etc.
-//            )
-//        }
-//
-//        // Ruta para el Registro
-//        composable(Screen.Register.route) {
-//            RegisterScreen(
-//                onBackClick = { navController.popBackStack() }
-//                // ...etc.
-//            )
-//        }
+        composable(Screen.Login.route) {
+            LoginScreen(
 
-        // ... (Añade el resto de tus rutas aquí: Home, Notifications, etc.)
+                onLoginSuccess = {
+
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                    }
+                },
+                onForgotPasswordClick = {
+                    // TO DO: Navegar a la pantalla de "Forgot Password"
+                },
+                onSignUpClick = {
+                    navController.navigate(Screen.Register.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                },
+                onFingerprintClick = {}, // TO DO: Implementar
+                onGoogleClick = {}, // TO DO: Implementar
+                onBottomSignUpClick = {
+                    navController.navigate(Screen.Register.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+
+                onRegisterSuccess = {
+
+                    navController.navigate(Screen.Login.route) {
+
+                        popUpTo(navController.graph.startDestinationRoute!!) { inclusive = true }
+                    }
+                },
+                onBackToLoginClick = {
+
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Register.route) { inclusive = true }
+                    }
+                }
+            )
+        }
     }
+
 }

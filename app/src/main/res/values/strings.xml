@@ -19,4 +19,29 @@
     <string name="onboarding_image_1_desc">A hand holding several coins</string>
     <string name="onboarding_image_2_desc">A hand holding a phone with a success checkmark</string>
 
+    <string name="login_welcome_title">Welcome</string>
+    <string name="login_label_email">Username or Email</string>
+    <string name="login_label_password">Password</string>
+    <string name="login_placeholder_hide_password">Hide password</string>
+    <string name="login_placeholder_show_password">Show password</string>
+    <string name="login_toast_fill_fields">Please fill all fields</string>
+    <string name="login_link_no_account">Don\'t have an account? Sign Up</string>
+    <string name="login_use_fingerprint">Use Fingerprint To Access</string>
+    <string name="login_or_sign_up_with">or sign up with</string>
+    <string name="login_icon_desc_facebook">Sign in with Facebook</string>
+    <string name="login_icon_desc_google">Sign in with Google</string>
+    <string name="login_placeholder_email">example@example.com</string>
+    <string name="login_placeholder_password">••••••••</string>
+
+    <string name="register_title">Create Account</string>
+    <string name="register_label_full_name">Full Name</string>
+    <string name="register_label_email">Email</string>
+    <string name="register_label_mobile">Mobile Number</string>
+    <string name="register_placeholder_mobile">+ 123 456 789</string>
+    <string name="register_label_dob">Date Of Birth</string>
+    <string name="register_placeholder_dob">DD / MM / YYYY</string>
+    <string name="register_label_confirm_password">Confirm Password</string>
+    <string name="register_legal_text">By continuing, you agree to Terms of Use and Privacy Policy.</string>
+    <string name="register_link_log_in">Already have an account? Log In</string>
+
 </resources>
