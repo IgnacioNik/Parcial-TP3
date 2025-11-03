@@ -42,7 +42,7 @@ class HomeViewModel(
     private val repository: TransactionRepository
     private val isGuestString: String = savedStateHandle.get<String>("isGuest") ?: "true"
     // 2. Convierte manualmente el String a un Boolean
-    private val isGuest: Boolean = isGuestString.toBoolean()
+    val isGuest: Boolean = isGuestString.toBoolean()
 
     // StateFlow para el Header (Balance, Gasto)
     private val _headerState = MutableStateFlow<HeaderUiState>(HeaderUiState.Loading)

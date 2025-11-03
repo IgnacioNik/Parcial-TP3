@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.ui.screens.AccountBalanceScreen
 import com.example.myapplication.ui.screens.HomeScreen
 import com.example.myapplication.ui.screens.LoginScreen
 import com.example.myapplication.ui.screens.NotificationScreen
@@ -124,6 +125,10 @@ fun AppNavigation() {
 
         composable(Screen.Notification.route) {
             NotificationScreen(navController = navController)
+        }
+
+        composable(Screen.AccountBalance.route){
+            AccountBalanceScreen(navController = navController)
         }
 
     }

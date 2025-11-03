@@ -35,6 +35,7 @@ fun HomeScreen(
     val headerState by viewModel.headerState.collectAsState()
     val transactions by viewModel.transactionsState.collectAsState()
     val summaryState by viewModel.summaryState.collectAsState()
+    val isGuest = viewModel.isGuest
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -84,7 +85,10 @@ fun HomeScreen(
         }
 
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            AppBottomBar(navController = navController)
+            AppBottomBar(
+                navController = navController,
+                isGuest = isGuest // <-- ¡AQUÍ ESTÁ EL CAMBIO!
+            )
         }
     }
 }

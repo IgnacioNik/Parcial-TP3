@@ -33,7 +33,10 @@ import com.example.myapplication.ui.theme.AppTextDark
  * La barra de navegación inferior personalizada ("píldora" flotante)
  */
 @Composable
-fun AppBottomBar(navController: NavController) {
+fun AppBottomBar(
+    navController: NavController,
+    isGuest: Boolean // <-- 1. AÑADIMOS EL PARÁMETRO
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -58,7 +61,14 @@ fun AppBottomBar(navController: NavController) {
                 iconRes = R.drawable.ic_home,
                 description = stringResource(R.string.nav_desc_home),
                 isSelected = currentRoute == Screen.Home.route,
-                onClick = { navController.navigate(Screen.Home.route) }
+                onClick = {
+                    // 2. USAMOS LA RUTA CORRECTA
+                    navController.navigate(Screen.Home.createRoute(isGuest = isGuest)) {
+                        // Evita apilar pantallas de Home
+                        popUpTo(navController.graph.startDestinationRoute!!)
+                        launchSingleTop = true
+                    }
+                }
             )
             BottomBarIcon(
                 iconRes = R.drawable.ic_account_balance,

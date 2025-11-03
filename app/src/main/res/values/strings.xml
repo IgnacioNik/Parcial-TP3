@@ -83,4 +83,10 @@
     <string name="notification_title">Notification</string>
     <string name="notification_desc_arrow">Back</string>
 
+    <string name="header_account_balance">Account Balance</string>
+    <string name="account_balance_button_income">Income</string>
+    <string name="account_balance_button_expense">Expense</string>
+    <string name="account_balance_list_header">Transactions</string>
+    <string name="account_balance_list_see_all">See all</string>
+
 </resources>
