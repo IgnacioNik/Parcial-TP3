@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,7 +38,11 @@ import com.example.myapplication.R
 import com.example.myapplication.ui.components.FormTextField
 import com.example.myapplication.ui.components.PrimaryButton
 import com.example.myapplication.ui.components.TextLinkButton
-import com.example.myapplication.ui.theme.*
+import com.example.myapplication.ui.theme.AppBackground
+import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppTextDark
+import com.example.myapplication.ui.theme.AppTextGrey
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.viewmodels.RegisterUiState
 import com.example.myapplication.ui.viewmodels.RegisterViewModel
 

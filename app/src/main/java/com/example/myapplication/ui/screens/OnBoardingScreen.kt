@@ -33,7 +33,6 @@ import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppGreenLight
 import com.example.myapplication.ui.theme.AppTextDark
-import com.example.myapplication.ui.theme.AppTextWhite
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 

@@ -80,4 +80,7 @@
     <string name="nav_desc_categories">Categories</string>
     <string name="nav_desc_profile">Profile</string>
 
+    <string name="notification_title">Notification</string>
+    <string name="notification_desc_arrow">Back</string>
+
 </resources>

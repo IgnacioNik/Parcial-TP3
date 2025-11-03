@@ -9,7 +9,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.screens.*
+import com.example.myapplication.ui.screens.HomeScreen
+import com.example.myapplication.ui.screens.LoginScreen
+import com.example.myapplication.ui.screens.NotificationScreen
+import com.example.myapplication.ui.screens.OnboardingScreen
+import com.example.myapplication.ui.screens.RegisterScreen
+import com.example.myapplication.ui.screens.SplashScreenContent
+import com.example.myapplication.ui.screens.WelcomeScreen
 
 @Composable
 fun AppNavigation() {
@@ -112,7 +118,15 @@ fun AppNavigation() {
         }
 
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController) // <-- ¡Pásale el navController aquí!
+            HomeScreen(
+                navController = navController,
+                onNavigateToNotification = { // <-- PÁSALO AQUÍ
+                    navController.navigate(Screen.Notification.route)}
+                )
+        }
+
+        composable(Screen.Notification.route) {
+            NotificationScreen(navController = navController)
         }
 
     }

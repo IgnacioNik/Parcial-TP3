@@ -1,14 +1,35 @@
 package com.example.myapplication.ui.screens
 
+// --- ¡AQUÍ ESTÁN TODOS TUS COMPONENTES IMPORTADOS! ---
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,14 +40,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
-import com.example.myapplication.ui.theme.*
-// --- ¡AQUÍ ESTÁN TODOS TUS COMPONENTES IMPORTADOS! ---
+import com.example.myapplication.data.sampleTransactions
+import com.example.myapplication.ui.components.AppBottomBar
 import com.example.myapplication.ui.components.BalanceCard
 import com.example.myapplication.ui.components.SummarySection
-import com.example.myapplication.data.sampleTransactions // <-- 1. IMPORTA LA LISTA
-import com.example.myapplication.ui.components.AppBottomBar
 import com.example.myapplication.ui.components.TransactionItem
 import com.example.myapplication.ui.components.TransactionTabs
+import com.example.myapplication.ui.theme.AppBackground
+import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppGreenLight
+import com.example.myapplication.ui.theme.AppIconBlueTint
+import com.example.myapplication.ui.theme.AppTextDark
+import com.example.myapplication.ui.theme.AppTextWhite
+import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
 // --- DATOS DE PRUEBA (Mover a ViewModel luego) ---
@@ -35,7 +61,8 @@ import com.example.myapplication.ui.components.TransactionTabs
 // --- 1. LA PANTALLA PRINCIPAL (EL SCAFFOLD) ---
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    onNavigateToNotification: () -> Unit
 ) {
     var selectedTab by remember { mutableStateOf(2) } // 2 = "Monthly"
 
@@ -47,7 +74,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(AppGreen) // Este verde se verá detrás de la barra de estado
         ) {
-            HomeHeader() // Llama al header
+            HomeHeader(onNavigateToNotification = onNavigateToNotification) // Llama al header
 
             // 2. EL SURFACE BLANCO
             Surface(
@@ -95,7 +122,7 @@ fun HomeScreen(
 
 // --- 2. HEADER (Se queda en HomeScreen.kt) ---
 @Composable
-private fun HomeHeader() {
+private fun HomeHeader(onNavigateToNotification: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,7 +146,7 @@ private fun HomeHeader() {
                     color = AppTextDark // <-- CORRECCIÓN
                 )
             }
-            IconButton(onClick = { /* TODO: Navegar a Notificaciones */ }) {
+            IconButton(onClick =  onNavigateToNotification ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_notification),
                     contentDescription = stringResource(R.string.home_icon_desc_notification),
@@ -212,6 +239,9 @@ private fun HomeHeader() {
 @Composable
 fun HomeScreenPreview() {
     MyApplicationTheme {
-        HomeScreen(navController = rememberNavController())
+        HomeScreen(
+            navController = rememberNavController(),
+            onNavigateToNotification = {}
+        )
     }
 }

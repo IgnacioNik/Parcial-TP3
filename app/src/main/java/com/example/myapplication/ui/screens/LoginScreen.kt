@@ -15,16 +15,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,18 +35,19 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.ui.components.FormTextField
 import com.example.myapplication.ui.components.PrimaryButton
 import com.example.myapplication.ui.components.SecondaryButton
 import com.example.myapplication.ui.components.TextLinkButton
-import com.example.myapplication.ui.theme.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.material3.CircularProgressIndicator
-import com.example.myapplication.ui.viewmodels.LoginViewModel
+import com.example.myapplication.ui.theme.AppBackground
+import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppTextDark
+import com.example.myapplication.ui.theme.AppTextGrey
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.viewmodels.LoginUiState
+import com.example.myapplication.ui.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
