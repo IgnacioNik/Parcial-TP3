@@ -10,4 +10,6 @@ sealed class Screen(val route: String) {
     object Transactions : Screen("transactions")
     object Notifications : Screen("notifications")
     object Profile : Screen("profile")
+    object AccountBalance : Screen("account_balance")
+    object Categories : Screen("categories")
 }

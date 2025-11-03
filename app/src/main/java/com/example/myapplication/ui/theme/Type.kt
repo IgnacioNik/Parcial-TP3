@@ -34,7 +34,7 @@ val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = poppinsFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = 40.sp
+        fontSize = 28.sp
     ),
     displaySmall = TextStyle(
         fontFamily = poppinsFamily,

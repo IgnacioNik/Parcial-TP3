@@ -44,4 +44,40 @@
     <string name="register_legal_text">By continuing, you agree to Terms of Use and Privacy Policy.</string>
     <string name="register_link_log_in">Already have an account? Log In</string>
 
+    <string name="home_welcome">Hi, Welcome Back</string>
+    <string name="home_total_balance">Total Balance</string>
+    <string name="home_amount_balance">7,783.00</string>
+    <string name="home_total_expense">Total Expense</string>
+    <string name="home_amount_expense">-$1,187.40</string>
+    <string name="home_savings_desc">Savings on goals</string>
+    <string name="home_revenue_desc">Revenue Last Week</string>
+    <string name="home_food_desc">Food Last Week</string>
+    <string name="home_tab_daily">Daily</string>
+    <string name="home_tab_weekly">Weekly</string>
+    <string name="home_tab_monthly">Monthly</string>
+    <string name="home_transaction_salary">Salary</string>
+    <string name="home_transaction_groceries">Groceries</string>
+    <string name="home_transaction_rent">Rent</string>
+    <string name="home_nav_home">Home</string>
+    <string name="home_nav_stats">Stats</string>
+    <string name="home_nav_transfer">Transfer</string>
+    <string name="home_nav_profile">Profile</string>
+    <string name="home_good_morning">Good Morning</string>
+    <string name="home_icon_desc_notification">Notification</string>
+    <string name="home_icon_desc_check">Check</string>
+    <string name="home_progress_text_a">30%</string>
+    <string name="home_progress_text_b">$20,000.00</string>
+    <string name="home_looks_good">30% Of Your Expenses, Looks Good.</string>
+    <string name="home_summary_savings">Savings \nOn Goals</string>
+    <string name="home_summary_revenue">Revenue Last Week</string>
+    <string name="home_summary_food">Food Last Week</string>
+    <string name="home_amount_revenue">$4,000.00</string>
+    <string name="home_amount_food">-$100.00</string>
+
+    <string name="nav_desc_home">Home</string>
+    <string name="nav_desc_balance">Balance</string>
+    <string name="nav_desc_transactions">Transactions</string>
+    <string name="nav_desc_categories">Categories</string>
+    <string name="nav_desc_profile">Profile</string>
+
 </resources>

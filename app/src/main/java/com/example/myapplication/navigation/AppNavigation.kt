@@ -71,7 +71,7 @@ fun AppNavigation() {
                 onLoginSuccess = {
 
                     navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                        popUpTo(navController.graph.startDestinationRoute!!) { inclusive = true }
                     }
                 },
                 onForgotPasswordClick = {
@@ -82,7 +82,7 @@ fun AppNavigation() {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 },
-                onFingerprintClick = {}, // TO DO: Implementar
+                onFacebookprintClick = {}, // TO DO: Implementar
                 onGoogleClick = {}, // TO DO: Implementar
                 onBottomSignUpClick = {
                     navController.navigate(Screen.Register.route) {
@@ -110,6 +110,11 @@ fun AppNavigation() {
                 }
             )
         }
+
+        composable(Screen.Home.route) {
+            HomeScreen(navController = navController) // <-- ¡Pásale el navController aquí!
+        }
+
     }
 
 }

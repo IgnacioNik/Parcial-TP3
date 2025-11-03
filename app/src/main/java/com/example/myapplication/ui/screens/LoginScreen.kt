@@ -52,7 +52,7 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
-    onFingerprintClick: () -> Unit,
+    onFacebookprintClick: () -> Unit,
     onGoogleClick: () -> Unit,
     onBottomSignUpClick: () -> Unit,
 
@@ -97,7 +97,7 @@ fun LoginScreen(
         Surface(
             modifier = Modifier.fillMaxWidth().weight(0.75f),
             color = AppBackground,
-            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+            shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxSize().padding(horizontal = 32.dp),
@@ -191,7 +191,7 @@ fun LoginScreen(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    IconButton(onClick = onFingerprintClick) {
+                    IconButton(onClick = onFacebookprintClick) {
                         Image(
                             painter = painterResource(id = R.drawable.logo_facebook),
                             contentDescription = stringResource(R.string.login_icon_desc_facebook),
@@ -229,7 +229,7 @@ fun LoginScreenPreview() {
             onLoginSuccess = {},
             onForgotPasswordClick = {},
             onSignUpClick = {},
-            onFingerprintClick = {},
+            onFacebookprintClick = {},
             onGoogleClick = {},
             onBottomSignUpClick = {}
         )

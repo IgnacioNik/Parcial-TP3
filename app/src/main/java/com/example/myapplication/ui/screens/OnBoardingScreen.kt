@@ -175,7 +175,7 @@ fun OnboardingPage(page: Int) {
                 .fillMaxWidth()
                 .weight(0.7f),
             color = AppBackground,
-            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+            shape = RoundedCornerShape(topStart = 48.dp, topEnd = 48.dp)
         ) {
             Box(
                 modifier = Modifier
