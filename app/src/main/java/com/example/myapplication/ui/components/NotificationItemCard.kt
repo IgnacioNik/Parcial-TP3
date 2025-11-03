@@ -25,7 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.data.NotificationItem
+import com.example.myapplication.data.models.NotificationItem
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark

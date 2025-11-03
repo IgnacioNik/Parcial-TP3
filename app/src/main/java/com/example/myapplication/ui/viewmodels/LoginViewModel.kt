@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.api.RetrofitClient
-import com.example.myapplication.data.LoginRequest
+import com.example.myapplication.data.models.LoginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
+    object GuestLogin : LoginUiState() // <-- ¡NUEVO!
     object Success : LoginUiState()
     data class Error(val message: String) : LoginUiState()
 }
@@ -36,32 +37,38 @@ class LoginViewModel : ViewModel() {
 
 
     fun login() {
-
         if (_loginState.value == LoginUiState.Loading) return
 
+        // --- ¡CAMBIO CLAVE! ---
+        // Si ambos campos están vacíos, es un login de invitado
+        if (email.isBlank() && password.isBlank()) {
+            _loginState.value = LoginUiState.GuestLogin
+            return // No seguimos a la API
+        }
+        // ----------------------
 
+        // Si los campos *no* están vacíos, intentamos el login real
         _loginState.value = LoginUiState.Loading
-
         viewModelScope.launch {
             try {
                 val request = LoginRequest(email, password)
-                // La API Key que te pide la consigna [cite: 142]
                 val apiKey = "123456789"
 
                 val response = RetrofitClient.instance.login(apiKey, request)
 
                 if (response.isSuccessful && response.body() != null) {
-
                     _loginState.value = LoginUiState.Success
-
                 } else {
-
                     _loginState.value = LoginUiState.Error("Invalid credentials")
                 }
             } catch (e: Exception) {
-
                 _loginState.value = LoginUiState.Error("Network error: ${e.message}")
             }
         }
+    }
+
+    // Función para resetear el estado (para que los Toasts no se repitan)
+    fun resetErrorState() {
+        _loginState.value = LoginUiState.Idle
     }
 }

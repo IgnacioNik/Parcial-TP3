@@ -51,13 +51,14 @@ import com.example.myapplication.ui.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    // --- 1. ¡CAMBIO EN LA FIRMA! ---
     onLoginSuccess: () -> Unit,
+    onGuestLogin: () -> Unit, // <-- ¡NUEVO!
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onFacebookprintClick: () -> Unit,
     onGoogleClick: () -> Unit,
     onBottomSignUpClick: () -> Unit,
-
     viewModel: LoginViewModel = viewModel()
 ) {
 
@@ -72,12 +73,14 @@ fun LoginScreen(
     LaunchedEffect(loginState) {
         when (loginState) {
             is LoginUiState.Success -> {
-
-                onLoginSuccess()
+                onLoginSuccess() // Navega a Home (logueado)
+            }
+            is LoginUiState.GuestLogin -> {
+                onGuestLogin() // Navega a Home (invitado)
             }
             is LoginUiState.Error -> {
-
                 Toast.makeText(context, loginState.message, Toast.LENGTH_SHORT).show()
+                viewModel.resetErrorState() // Resetea el error
             }
             else -> {}
         }
@@ -229,6 +232,7 @@ fun LoginScreenPreview() {
     MyApplicationTheme {
         LoginScreen(
             onLoginSuccess = {},
+            onGuestLogin = {}, // <-- ¡NUEVO!
             onForgotPasswordClick = {},
             onSignUpClick = {},
             onFacebookprintClick = {},

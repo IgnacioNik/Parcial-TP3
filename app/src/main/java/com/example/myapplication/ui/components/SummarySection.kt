@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,89 +42,113 @@ import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.AppTextWhite
+import com.example.myapplication.ui.viewmodels.SummaryUiState
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 @Composable
-fun SummarySection() {
+fun SummarySection(summaryState: SummaryUiState) { // <-- 1. ACEPTA EL ESTADO
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min), // Ayuda a que la Row mida bien
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = AppGreen),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            // --- COLUMNA 1: SAVINGS ---
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                // Box para el círculo de progreso
+        // 2. MANEJA LOS ESTADOS (LOADING, ERROR, SUCCESS)
+        when (summaryState) {
+            is SummaryUiState.Loading -> {
+                // Muestra un spinner centrado
                 Box(
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp), // Dale un poco de espacio
                     contentAlignment = Alignment.Center
                 ) {
-                    // --- CAMBIO 1: USAMOS UN CANVAS ---
-                    GaplessCircularProgress(
-                        modifier = Modifier.fillMaxSize(),
-                        progress = 0.5f, // 50%
-                        progressColor = AppIconBlueTint, // El azul
-                        trackColor = AppTextWhite,
-                        strokeWidth = 3.dp
-                    )
-                    // --- FIN CAMBIO 1 ---
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_car_saving),
-                        contentDescription = stringResource(R.string.home_summary_savings),
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(32.dp)
-                    )
+                    CircularProgressIndicator(color = AppTextWhite)
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // --- CAMBIO 2: TEXTO ---
-                Text(
-                    text = stringResource(R.string.home_summary_savings), // Usa el string con \n
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppTextDark,
-                    textAlign = TextAlign.Center
-                    // <-- QUITAMOS el modifier = Modifier.width(70.dp)
-                )
-                // --- FIN CAMBIO 2 ---
             }
+            is SummaryUiState.Error -> {
+                // Muestra un mensaje de error
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = summaryState.message, color = AppTextWhite)
+                }
+            }
+            is SummaryUiState.Success -> {
+                // 3. DIBUJA EL CONTENIDO CON LOS DATOS DEL VIEWMODEL
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // --- COLUMNA 1: SAVINGS ---
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Box(
+                            modifier = Modifier.size(60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            GaplessCircularProgress(
+                                modifier = Modifier.fillMaxSize(),
+                                progress = summaryState.savingsProgress, // <-- DATO DEL VIEWMODEL
+                                progressColor = AppIconBlueTint,
+                                trackColor = AppTextWhite,
+                                strokeWidth = 3.dp
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_car_saving),
+                                contentDescription = stringResource(R.string.home_summary_savings),
+                                tint = Color.Unspecified,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(R.string.home_summary_savings),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = AppTextDark, // <-- CORRECCIÓN DE COLOR
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
-            // --- DIVIDER VERTICAL ---
-            Spacer(modifier = Modifier.width(16.dp))
-            Divider(
-                modifier = Modifier.fillMaxHeight().width(1.dp),
-                color = AppTextWhite.copy(alpha = 0.5f)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
+                    // --- DIVIDER VERTICAL ---
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Divider(
+                        modifier = Modifier.fillMaxHeight().width(1.dp),
+                        color = AppTextWhite.copy(alpha = 0.5f)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
 
-            Column(
-                modifier = Modifier.weight(1.5f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                SummaryItem(
-                    iconRes = R.drawable.ic_revenue_stack, // (Tu ícono)
-                    title = stringResource(R.string.home_summary_revenue),
-                    amount = stringResource(R.string.home_amount_revenue),
-                    amountColor = AppTextWhite
-                )
-                Divider(color = AppTextWhite.copy(alpha = 0.5f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+                    // --- COLUMNA 2: REVENUE Y FOOD ---
+                    Column(
+                        modifier = Modifier.weight(1.5f),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        SummaryItem(
+                            iconRes = R.drawable.ic_revenue_stack,
+                            title = stringResource(R.string.home_summary_revenue),
+                            amount = "$${"%.2f".format(summaryState.revenueLastWeek)}", // <-- DATO DEL VIEWMODEL
+                            amountColor = AppTextWhite
+                        )
 
-                SummaryItem(
-                    iconRes = R.drawable.ic_food_fork_knife, // (Tu ícono)
-                    title = stringResource(R.string.home_summary_food),
-                    amount = stringResource(R.string.home_amount_food),
-                    amountColor = AppIconBlueTint // Color azul
-                )
+                        Divider(color = AppTextWhite.copy(alpha = 0.5f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
+
+                        SummaryItem(
+                            iconRes = R.drawable.ic_food_fork_knife,
+                            title = stringResource(R.string.home_summary_food),
+                            amount = "-$${"%.2f".format(summaryState.foodLastWeek)}", // <-- DATO DEL VIEWMODEL
+                            amountColor = AppIconBlueTint
+                        )
+                    }
+                }
             }
         }
     }

@@ -26,7 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.data.Transaction
+import com.example.myapplication.data.models.Transaction
+import com.example.myapplication.data.models.TransactionEntity
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
@@ -34,7 +35,15 @@ import com.example.myapplication.ui.theme.AppTextGrey
 
 // 2. EL COMPONENTE
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: TransactionEntity) {
+    // --- Lógica de formateo ---
+    val amountString = "%.2f".format(transaction.amount)
+    val formattedAmount = if (transaction.type == "credit") {
+        "$$amountString"
+    } else {
+        "-$${amountString}"
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,18 +51,17 @@ fun TransactionItem(transaction: Transaction) {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        // --- 1. ICONO (CORREGIDO) ---
+        // --- 1. ICONO ---
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .clip(CircleShape), // Mantenemos el recorte por si acaso
-            // <-- QUITAMOS EL .background()
+                .clip(CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = transaction.icon),
-                contentDescription = transaction.title,
-                tint = Color.Unspecified // <-- USA EL COLOR ORIGINAL DEL ICONO
+                painter = painterResource(id = transaction.icon), // <-- USA HELPER
+                contentDescription = transaction.title, // <-- USA HELPER
+                tint = Color.Unspecified
             )
         }
 
@@ -65,16 +73,16 @@ fun TransactionItem(transaction: Transaction) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = transaction.title,
+                text = transaction.title, // <-- USA HELPER
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = AppTextDark.copy(alpha = 0.9f),
+                color = AppTextDark.copy(alpha = 0.9f), // (AppTextDark que usaste)
                 maxLines = 1
             )
             Text(
-                text = transaction.date,
+                text = transaction.date, // <-- USA HELPER
                 style = MaterialTheme.typography.bodySmall,
-                color = AppIconBlueTint, // Color azul
+                color = AppIconBlueTint, // (Tu color azul)
                 maxLines = 1
             )
         }
@@ -82,13 +90,13 @@ fun TransactionItem(transaction: Transaction) {
         // --- 3. DIVIDER ---
         TransactionDivider()
 
-        // --- 4. CATEGORÍA (CORREGIDO) ---
+        // --- 4. CATEGORÍA ---
         Box(
             modifier = Modifier.weight(0.3f),
-            contentAlignment = Alignment.Center // <-- CENTRADO
+            contentAlignment = Alignment.Center
         ) {
             Text(
-                text = transaction.category,
+                text = transaction.category, // <-- USA HELPER
                 style = MaterialTheme.typography.bodySmall,
                 color = AppTextGrey,
                 maxLines = 1
@@ -98,17 +106,17 @@ fun TransactionItem(transaction: Transaction) {
         // --- 5. DIVIDER ---
         TransactionDivider()
 
-        // --- 6. MONTO (CORREGIDO) ---
+        // --- 6. MONTO ---
         Box(
             modifier = Modifier.weight(0.35f),
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = transaction.amount,
+                text = formattedAmount, // <-- USA HELPER
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                // Lógica de color actualizada (ya no busca "+")
-                color = if (!transaction.amount.startsWith("-")) AppTextDark else AppIconBlueTint,
+                // Lógica de color basada en el "type" de la API
+                color = if (transaction.type == "credit") AppTextDark else AppIconBlueTint,
                 maxLines = 1,
                 textAlign = TextAlign.End
             )

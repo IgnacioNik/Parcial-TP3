@@ -68,33 +68,30 @@ fun AppNavigation() {
             WelcomeScreen(
                 onLoginClick = { navController.navigate(Screen.Login.route) },
                 onRegisterClick = { navController.navigate(Screen.Register.route) }
+                // (No más onGuestClick aquí)
             )
         }
 
+        // --- 2. ACTUALIZA LOGIN SCREEN ---
         composable(Screen.Login.route) {
             LoginScreen(
-
                 onLoginSuccess = {
-
-                    navController.navigate(Screen.Home.route) {
+                    // Navega a Home como USUARIO LOGUEADO
+                    navController.navigate(Screen.Home.createRoute(isGuest = false)) {
                         popUpTo(navController.graph.startDestinationRoute!!) { inclusive = true }
                     }
                 },
-                onForgotPasswordClick = {
-                    // TO DO: Navegar a la pantalla de "Forgot Password"
-                },
-                onSignUpClick = {
-                    navController.navigate(Screen.Register.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
+                onGuestLogin = {
+                    // Navega a Home como INVITADO
+                    navController.navigate(Screen.Home.createRoute(isGuest = true)) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
                     }
                 },
-                onFacebookprintClick = {}, // TO DO: Implementar
-                onGoogleClick = {}, // TO DO: Implementar
-                onBottomSignUpClick = {
-                    navController.navigate(Screen.Register.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
-                }
+                onForgotPasswordClick = { /* ... */ },
+                onSignUpClick = { /* ... */ },
+                onFacebookprintClick = { /* ... */ },
+                onGoogleClick = { /* ... */ },
+                onBottomSignUpClick = { /* ... */ }
             )
         }
 
