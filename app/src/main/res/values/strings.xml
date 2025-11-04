@@ -89,4 +89,9 @@
     <string name="account_balance_list_header">Transactions</string>
     <string name="account_balance_list_see_all">See all</string>
 
+    <string name="header_transactions">Transaction</string>
+    <string name="transactions_total_balance">Total Balance</string>
+    <string name="transactions_group_april">April</string>
+    <string name="transactions_group_march">March</string>
+
 </resources>

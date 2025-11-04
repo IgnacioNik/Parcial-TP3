@@ -56,7 +56,7 @@ fun HomeHeader(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // --- FILA 2, 3, 4: Llama al componente reutilizable ---
         BalanceHeaderSection(headerState = headerState)

@@ -16,6 +16,7 @@ import com.example.myapplication.ui.screens.NotificationScreen
 import com.example.myapplication.ui.screens.OnboardingScreen
 import com.example.myapplication.ui.screens.RegisterScreen
 import com.example.myapplication.ui.screens.SplashScreenContent
+import com.example.myapplication.ui.screens.TransactionsScreen
 import com.example.myapplication.ui.screens.WelcomeScreen
 
 @Composable
@@ -129,6 +130,10 @@ fun AppNavigation() {
 
         composable(Screen.AccountBalance.route){
             AccountBalanceScreen(navController = navController)
+        }
+
+        composable  (Screen.Transactions.route ){
+             TransactionsScreen(navController = navController)
         }
 
     }

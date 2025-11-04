@@ -60,11 +60,11 @@ fun AccountBalanceScreen(
             )
 
             // 2. Sección de Balance (Tarjetas y Barra de Progreso)
-            Column(modifier = Modifier.padding(horizontal = 32.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 32.dp).offset(y = (-12).dp)) {
                 BalanceHeaderSection(headerState = headerState)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 3. BOTONES (ahora con strings y datos del ViewModel)
             Row(
@@ -93,7 +93,7 @@ fun AccountBalanceScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 4. CONTENIDO BLANCO
             Surface(
@@ -106,7 +106,7 @@ fun AccountBalanceScreen(
                     contentPadding = PaddingValues(
                         start = 32.dp,
                         end = 32.dp,
-                        top = 24.dp,
+                        top = 16.dp,
                         bottom = 96.dp
                     )
                 ) {

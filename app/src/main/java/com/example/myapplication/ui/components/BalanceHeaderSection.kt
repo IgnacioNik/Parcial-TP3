@@ -71,7 +71,7 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
                         amountColor = AppIconBlueTint
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 // Fila 3: Barra de Progreso
                 ProgressBarWithText(
@@ -98,7 +98,7 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
                         amountColor = AppIconBlueTint
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 // Fila 3: Barra de Progreso
                 ProgressBarWithText(
@@ -142,14 +142,14 @@ private fun ProgressBarWithText(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(16.dp),
+            .height(20.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .background(AppGreenLight),
+                .background(AppTextWhite),
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
