@@ -79,17 +79,6 @@ data class Transaction(
     }
 }
 
-// 2. LOS DATOS DE PRUEBA
-//val sampleTransactions = listOf(
-//    // (Asumo que 4000.00 son 400000 centavos/unidades)
-//    Transaction(id = "001", date = "18:27 - April 30", description = "Salary", amount = 400000.00, currency = "ARS", type = "credit"),
-//    Transaction(id = "002", date = "17:00 - April 24", description = "Groceries", amount = 10000.00, currency = "ARS", type = "debit"),
-//    Transaction(id = "003", date = "8:30 - April 15", description = "Rent", amount = 67440.00, currency = "ARS", type = "debit"),
-//    Transaction(id = "004", date = "12:00 - April 14", description = "Spotify", amount = 100.00, currency = "ARS", type = "debit"),
-//    Transaction(id = "005", date = "09:00 - April 12", description = "Transport", amount = 50.00, currency = "ARS", type = "debit"),
-//    Transaction(id = "006", date = "15:30 - April 10", description = "Freelance", amount = 500.00, currency = "ARS", type = "credit")
-//)
-
 val sampleTransactionEntities = listOf(
     TransactionEntity(id = "001", title = "Salary", category = "Monthly", amount = 4000.00, date = "18:27 - April 30", icon = R.drawable.ic_salary, type = "credit"),
     TransactionEntity(id = "002", title = "Groceries", category = "Pantry", amount = 100.00, date = "17:00 - April 24", icon = R.drawable.ic_groceries, type = "debit"),
@@ -136,4 +125,25 @@ val sampleNotifications = listOf(
             NotificationItem(6, "Transactions", "A new transaction has been registered", "17:00 - April 24", R.drawable.ic_notif_dollar, AppGreen,"Food | Dinner | -$70.40", iconSize = 20.dp) // <-- Tamaño Dólar
         )
     )
+)
+
+data class Category(
+    val id: String,
+    val title: String,
+    @DrawableRes val iconRes: Int // El ID del recurso drawable (ej: R.drawable.ic_food)
+)
+
+// 2. Crea la lista de muestra (hardcodeada)
+// NOTA: Debes asegurarte de tener estos iconos en tu carpeta res/drawable
+// (ic_food, ic_transport, ic_medicine, etc.)
+val sampleCategories = listOf(
+    Category(id = "1", title = "Food", iconRes = R.drawable.ic_food),
+    Category(id = "2", title = "Transport", iconRes = R.drawable.ic_transport),
+    Category(id = "3", title = "Medicine", iconRes = R.drawable.ic_medicine),
+    Category(id = "4", title = "Groceries", iconRes = R.drawable.ic_groceries),
+    Category(id = "5", title = "Rent", iconRes = R.drawable.ic_rent),
+    Category(id = "6", title = "Gifts", iconRes = R.drawable.ic_gift),
+    Category(id = "7", title = "Savings", iconRes = R.drawable.ic_saving),
+    Category(id = "8", title = "Entertainment", iconRes = R.drawable.ic_entertainment),
+    Category(id = "9", title = "More", iconRes = R.drawable.ic_more),
 )

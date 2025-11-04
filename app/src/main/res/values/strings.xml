@@ -94,4 +94,7 @@
     <string name="transactions_group_april">April</string>
     <string name="transactions_group_march">March</string>
 
+    <string name="categories_title">Categories</string>
+
+
 </resources>

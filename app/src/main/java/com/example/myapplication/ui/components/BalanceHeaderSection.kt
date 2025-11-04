@@ -29,13 +29,13 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally),
-                color = AppTextWhite
+                color = AppTextWhite // Asegúrate que este color sea visible en el fondo
             )
         }
         is HeaderUiState.Error -> {
             Text(
                 text = headerState.message,
-                color = AppTextWhite,
+                color = AppTextWhite, // Asegúrate que este color sea visible en el fondo
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
@@ -55,14 +55,27 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
                 val limit = "$${userData.creditCard.creditLimit}"
                 val progressText = "${(progress * 100).toInt()}%"
 
-                // Fila 2: Balance Cards
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                // --- CAMBIO AQUÍ ---
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp), // 1. Espacio reducido
+                    verticalAlignment = Alignment.CenterVertically      // 2. Alineación vertical
+                ) {
                     BalanceCard(
                         title = stringResource(R.string.home_total_balance),
                         amount = totalBalance,
                         icon = R.drawable.ic_income,
                         modifier = Modifier.weight(1f)
                     )
+
+                    // 3. ¡LA LÍNEA DIVISORIA!
+                    Divider(
+                        color = AppTextWhite.copy(alpha = 0.5f), // Color blanco semi-transparente
+                        modifier = Modifier
+                            .height(40.dp) // Altura de la línea
+                            .width(1.dp)
+                    )
+
                     BalanceCard(
                         title = stringResource(R.string.home_total_expense),
                         amount = totalExpense,
@@ -82,14 +95,28 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
 
             } else {
                 // --- SI NO HAY TARJETA (Usuario nuevo) ---
-                // Fila 2: Balance Cards
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+
+                // --- CAMBIO AQUÍ (MISMO CAMBIO DE ARRIBA) ---
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp), // 1. Espacio reducido
+                    verticalAlignment = Alignment.CenterVertically      // 2. Alineación vertical
+                ) {
                     BalanceCard(
                         title = stringResource(R.string.home_total_balance),
                         amount = totalBalance, // $0.00
                         icon = R.drawable.ic_income,
                         modifier = Modifier.weight(1f)
                     )
+
+                    // 3. ¡LA LÍNEA DIVISORIA!
+                    Divider(
+                        color = AppTextWhite.copy(alpha = 0.5f), // Color blanco semi-transparente
+                        modifier = Modifier
+                            .height(40.dp) // Altura de la línea
+                            .width(1.dp)
+                    )
+
                     BalanceCard(
                         title = stringResource(R.string.home_total_expense),
                         amount = "-$0.00", // Valor por defecto
@@ -121,6 +148,9 @@ fun BalanceHeaderSection(headerState: HeaderUiState) {
                 Text(
                     text = stringResource(R.string.home_looks_good),
                     style = MaterialTheme.typography.bodySmall,
+                    // Este color depende del fondo. Si el fondo es verde,
+                    // este color debería ser AppTextWhite. Si el fondo es blanco,
+                    // debería ser AppTextDark o AppGreen.
                     color = AppTextDark
                 )
             }
@@ -139,38 +169,42 @@ private fun ProgressBarWithText(
     progressText: String,
     limitText: String
 ) {
+    // Este diseño de barra de progreso asume un fondo claro (blanco).
+    // Si tu fondo es verde, necesitarás cambiar estos colores.
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(20.dp),
         contentAlignment = Alignment.CenterStart
     ) {
+        // Fondo de la barra
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .background(AppTextWhite),
+                .background(AppGreenLight), // Color de fondo (ej: verde claro)
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
                 text = limitText,
                 style = MaterialTheme.typography.bodySmall,
-                color = AppTextDark,
+                color = AppTextDark, // Color de texto para el límite
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         }
+        // Barra de progreso (relleno)
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(progress.coerceIn(0f, 1f)) // Evita que se pase de 100%
+                .fillMaxWidth(progress.coerceIn(0f, 1f))
                 .clip(CircleShape)
-                .background(AppTextDark),
+                .background(AppTextDark), // Color de relleno (ej: oscuro)
             contentAlignment = Alignment.CenterStart
         ) {
             Text(
                 text = progressText,
                 style = MaterialTheme.typography.bodySmall,
-                color = AppTextWhite,
+                color = AppTextWhite, // Color de texto para el progreso
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
         }
