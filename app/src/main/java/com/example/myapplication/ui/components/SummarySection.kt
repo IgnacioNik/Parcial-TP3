@@ -43,7 +43,6 @@ import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.AppTextWhite
 import com.example.myapplication.ui.viewmodels.SummaryUiState
-import com.google.android.material.progressindicator.CircularProgressIndicator
 
 @Composable
 fun SummarySection(summaryState: SummaryUiState) { // <-- 1. ACEPTA EL ESTADO

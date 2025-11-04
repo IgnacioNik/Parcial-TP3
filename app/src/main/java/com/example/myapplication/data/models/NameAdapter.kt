@@ -1,6 +1,8 @@
 package com.example.myapplication.data.models
 
-import com.google.gson.*
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
 class NameAdapter : JsonDeserializer<String> {

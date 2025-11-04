@@ -15,6 +15,7 @@ import com.example.myapplication.ui.screens.HomeScreen
 import com.example.myapplication.ui.screens.LoginScreen
 import com.example.myapplication.ui.screens.NotificationScreen
 import com.example.myapplication.ui.screens.OnboardingScreen
+import com.example.myapplication.ui.screens.ProfileScreen
 import com.example.myapplication.ui.screens.RegisterScreen
 import com.example.myapplication.ui.screens.SplashScreenContent
 import com.example.myapplication.ui.screens.TransactionsScreen
@@ -141,6 +142,9 @@ fun AppNavigation() {
              CategoriesScreen(navController = navController)
         }
 
+        composable(Screen.Profile.route){
+             ProfileScreen(navController = navController)
+        }
     }
 
 }

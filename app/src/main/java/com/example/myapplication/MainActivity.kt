@@ -3,9 +3,9 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.core.view.WindowCompat
 import com.example.myapplication.navigation.AppNavigation
+import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
 class MainActivity : ComponentActivity() {

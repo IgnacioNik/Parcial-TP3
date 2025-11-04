@@ -12,13 +12,13 @@ import com.example.myapplication.data.models.TransactionEntity
 import com.example.myapplication.data.models.UserResponse
 import com.example.myapplication.data.models.sampleCategories
 import com.example.myapplication.data.models.sampleNotifications
-import com.example.myapplication.data.repository.TransactionRepository
 import com.example.myapplication.data.models.sampleTransactionEntities
+import com.example.myapplication.data.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat // <-- 1. IMPORTA EL FORMATEADOR
+import java.text.DecimalFormat
 
 // --- 2. ¡DEFINE LOS ESTADOS AQUÍ (FUERA DE LA CLASE)! ---
 sealed class HeaderUiState {
