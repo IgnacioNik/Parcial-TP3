@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,18 +35,18 @@ fun NotificationScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
     val isGuest = viewModel.isGuest
+    // --- 3. ¡CONSUME EL ESTADO DEL VIEWMODEL! ---
+    val notificationGroups by viewModel.notificationsState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
 
         Column(modifier = Modifier.fillMaxSize().background(AppGreen)) {
 
-            // --- 3. ¡AQUÍ LO USAMOS! ---
             AppHeader(
                 title = stringResource(R.string.notification_title),
                 onBackClick = { navController.popBackStack() },
                 onNotificationClick = { /* TODO: Settings */ }
             )
-            // --- FIN DEL CAMBIO ---
 
             Surface(
                 modifier = Modifier
@@ -62,13 +64,14 @@ fun NotificationScreen(
                         bottom = 96.dp
                     )
                 ) {
-                    sampleNotifications.forEach { group ->
+                    // --- 4. USA LA LISTA DEL VIEWMODEL ---
+                    notificationGroups.forEach { group ->
                         stickyHeader {
                             Text(
                                 text = group.title,
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Bold,
-                                color = AppTextDark, // (Tu AppTextDark)
+                                color = AppTextDark,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(AppBackground)

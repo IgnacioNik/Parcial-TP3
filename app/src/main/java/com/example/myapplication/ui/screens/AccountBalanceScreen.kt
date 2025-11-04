@@ -30,19 +30,18 @@ fun AccountBalanceScreen(
 ) {
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
-    val transactions by viewModel.transactionsState.collectAsState()
+    val transactions by viewModel.transactionsState.collectAsState() // Esta pantalla sí usa la lista plana
     val summaryState by viewModel.summaryState.collectAsState()
 
     var selectedButton by remember { mutableStateOf("") }
 
-    // --- Lógica para los montos de los botones ---
+    // --- LÓGICA REFACTORIZADA ---
+    // Ya no formateamos nada aquí. Solo leemos los strings.
     var incomeAmount = "$0.00"
     var expenseAmount = "$0.00"
     if (summaryState is SummaryUiState.Success) {
-        val summaryData = (summaryState as SummaryUiState.Success)
-        // (La API no nos da "Expense" solo, así que usamos el total de "Food" como ejemplo)
-        incomeAmount = "$${"%.2f".format(summaryData.revenueLastWeek)}"
-        expenseAmount = "-$${"%.2f".format(summaryData.foodLastWeek)}"
+        incomeAmount = (summaryState as SummaryUiState.Success).formattedIncome
+        expenseAmount = (summaryState as SummaryUiState.Success).formattedExpense
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -54,19 +53,20 @@ fun AccountBalanceScreen(
         ) {
             // 1. Header de la App (Flecha, Título, Campana)
             AppHeader(
-                title = stringResource(R.string.header_account_balance), // <-- STRING
+                title = stringResource(R.string.header_account_balance),
                 onBackClick = { navController.popBackStack() },
                 onNotificationClick = { navController.navigate(Screen.Notification.route) }
             )
 
             // 2. Sección de Balance (Tarjetas y Barra de Progreso)
+            // (Mantenemos tus ajustes de layout)
             Column(modifier = Modifier.padding(horizontal = 32.dp).offset(y = (-12).dp)) {
                 BalanceHeaderSection(headerState = headerState)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 3. BOTONES (ahora con strings y datos del ViewModel)
+            // 3. BOTONES
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,8 +74,8 @@ fun AccountBalanceScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 BalanceToggleButton(
-                    text = stringResource(R.string.account_balance_button_income), // <-- STRING
-                    amount = incomeAmount, // <-- DATO
+                    text = stringResource(R.string.account_balance_button_income),
+                    amount = incomeAmount, // <-- Pasa el string limpio
                     iconRes = R.drawable.ic_income,
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_income),
                     onClick = { selectedButton = "Income" },
@@ -83,8 +83,8 @@ fun AccountBalanceScreen(
                     unselectedContentColor = AppGreen
                 )
                 BalanceToggleButton(
-                    text = stringResource(R.string.account_balance_button_expense), // <-- STRING
-                    amount = expenseAmount, // <-- DATO
+                    text = stringResource(R.string.account_balance_button_expense),
+                    amount = expenseAmount, // <-- Pasa el string limpio
                     iconRes = R.drawable.ic_expense,
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_expense),
                     onClick = { selectedButton = "Expense" },
@@ -93,7 +93,7 @@ fun AccountBalanceScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp)) // (Manteniendo tu ajuste de altura)
 
             // 4. CONTENIDO BLANCO
             Surface(
@@ -106,7 +106,7 @@ fun AccountBalanceScreen(
                     contentPadding = PaddingValues(
                         start = 32.dp,
                         end = 32.dp,
-                        top = 16.dp,
+                        top = 16.dp, // (Manteniendo tu ajuste de padding)
                         bottom = 96.dp
                     )
                 ) {
@@ -118,7 +118,7 @@ fun AccountBalanceScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(R.string.account_balance_list_header), // <-- STRING
+                                text = stringResource(R.string.account_balance_list_header),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = AppTextDark
@@ -135,6 +135,7 @@ fun AccountBalanceScreen(
                     }
 
                     // 6. LISTA DE TRANSACCIONES
+                    // Esta pantalla usa la lista plana 'transactions', lo cual está bien.
                     items(transactions, key = { it.id }) { transaction ->
                         TransactionItem(transaction)
                         Spacer(modifier = Modifier.height(16.dp))

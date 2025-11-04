@@ -32,13 +32,15 @@ fun TransactionsScreen(
 ) {
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
-    val transactions by viewModel.transactionsState.collectAsState()
+    // ¡NUEVO! Consume el estado agrupado
+    val groupedTransactions by viewModel.groupedTransactionsState.collectAsState()
     val isGuest = viewModel.isGuest
 
-    // --- Lógica para el balance (igual que en AccountBalance) ---
-    var totalBalance = "$0.00"
+    // --- Lógica de balance (¡AHORA ES MUCHO MÁS SIMPLE!) ---
+    var totalBalance = "$0.00" // Valor por defecto
     if (headerState is HeaderUiState.Success) {
-        totalBalance = "$${"%.2f".format((headerState as HeaderUiState.Success).userData.balance)}"
+        // Simplemente lee el valor, no lo calcules.
+        totalBalance = (headerState as HeaderUiState.Success).formattedBalance
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -57,7 +59,7 @@ fun TransactionsScreen(
 
             // 2. NUEVA TARJETA DE BALANCE
             TotalBalanceCard(
-                balance = totalBalance,
+                balance = totalBalance, // <-- Pasa el String ya formateado
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
@@ -65,18 +67,20 @@ fun TransactionsScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // 3. SECCIÓN DE BALANCEHEADER
             Column(modifier = Modifier.padding(horizontal = 32.dp)) {
                 BalanceHeaderSection(headerState = headerState)
             }
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // 3. CONTENIDO BLANCO
+            // 4. CONTENIDO BLANCO
             Surface(
                 modifier = Modifier.fillMaxWidth().weight(1f),
                 color = AppBackground,
                 shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
             ) {
+                // --- ¡LAZYCOLUMN REFACTORIZADA! ---
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
@@ -86,28 +90,20 @@ fun TransactionsScreen(
                         bottom = 96.dp
                     )
                 ) {
-                    // 4. STICKY HEADER "April"
-                    stickyHeader {
-                        ListHeader(text = stringResource(R.string.transactions_group_april))
-                    }
+                    // Itera sobre el Mapa (Key="April", Value=List(...))
+                    groupedTransactions.forEach { (month, transactionsInMonth) ->
 
-                    // 5. LISTA DE TRANSACCIONES (de April)
-                    // (Esta lógica se puede mejorar en el ViewModel,
-                    // por ahora filtramos la lista completa)
-                    items(transactions.filter { it.date.contains("April", true) }, key = { it.id }) { transaction ->
-                        TransactionItem(transaction)
-                        Spacer(modifier = Modifier.height(16.dp))
-                    }
+                        // STICKY HEADER
+                        stickyHeader {
+                            ListHeader(text = month) // Usa la Key como título
+                        }
 
-                    // 6. STICKY HEADER "March"
-                    stickyHeader {
-                        ListHeader(text = stringResource(R.string.transactions_group_march))
-                    }
-
-                    // 7. LISTA DE TRANSACCIONES (de March)
-                    items(transactions.filter { it.date.contains("March", true) }, key = { it.id }) { transaction ->
-                        TransactionItem(transaction)
-                        Spacer(modifier = Modifier.height(16.dp))
+                        // LISTA DE TRANSACCIONES
+                        // 'transactionsInMonth' ya es la lista filtrada por el ViewModel
+                        items(transactionsInMonth, key = { it.id }) { transaction ->
+                            TransactionItem(transaction)
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
                     }
                 }
             }
