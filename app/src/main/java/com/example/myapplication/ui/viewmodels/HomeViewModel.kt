@@ -2,7 +2,6 @@ package com.example.myapplication.ui.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.data.models.BankAccount
