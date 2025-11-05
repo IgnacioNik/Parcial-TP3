@@ -13,7 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext // <-- 2. IMPORTA LOCALCONTEXT
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider // <-- 3. IMPORTA VIEWMODELPROVIDER
 import androidx.lifecycle.viewmodel.compose.viewModel // <-- 4. ASEGÚRATE DE USAR ESTE IMPORT
@@ -149,12 +153,21 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = stringResource(R.string.register_legal_text),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppTextGrey,
-                    textAlign = TextAlign.Center
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(R.string.register_legal_line_1),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppTextGrey,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = stringResource(R.string.register_legal_line_2),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppTextGrey,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -171,10 +184,21 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TextLinkButton(
-                    text = stringResource(R.string.register_link_log_in),
-                    onClick = onBackToLoginClick
-                )
+                TextButton(onClick = onBackToLoginClick) {
+                    Text(
+                        text = buildAnnotatedString {
+                            // Parte 1: "Don't have an account? " (Color por defecto)
+                            append(stringResource(R.string.register_link_log_in_par1))
+
+                            // Parte 2: "Sign Up" (Color Vívido)
+                            withStyle(style = SpanStyle(color = AppVividBlue)) {
+                                append(stringResource(R.string.register_link_log_in_par2))
+                            }
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppTextGrey
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(32.dp))
             }

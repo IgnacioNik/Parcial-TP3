@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -39,8 +43,10 @@ import com.example.myapplication.ui.components.SecondaryButton
 import com.example.myapplication.ui.components.TextLinkButton
 import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.AppTextGrey
+import com.example.myapplication.ui.theme.AppVividBlue
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.viewmodels.LoginUiState
 import com.example.myapplication.ui.viewmodels.LoginViewModel
@@ -161,9 +167,20 @@ fun LoginScreen(
 
 
                 Text(
-                    text = stringResource(R.string.login_use_fingerprint),
+                    text = buildAnnotatedString {
+                        // Parte 1: "Use " (usará el color por defecto AppTextGrey)
+                        append(stringResource(R.string.login_use_fingerprint_part1))
+
+                        // Parte 2: "Fingerprint" (con el color especial)
+                        withStyle(style = SpanStyle(color = AppIconBlueTint)) { // <-- ¡Elige tu color aquí!
+                            append(stringResource(R.string.login_use_fingerprint_part2))
+                        }
+
+                        // Parte 3: " to Access" (usará el color por defecto AppTextGrey)
+                        append(stringResource(R.string.login_use_fingerprint_part3))
+                    },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = AppTextGrey
+                    color = AppTextGrey // Este es el color por defecto para las partes 1 y 3
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -197,10 +214,21 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                TextLinkButton(
-                    text = stringResource(R.string.login_link_no_account),
-                    onClick = onBottomSignUpClick
-                )
+                TextButton(onClick = onBottomSignUpClick) {
+                    Text(
+                        text = buildAnnotatedString {
+                            // Parte 1: "Don't have an account? " (Color por defecto)
+                            append(stringResource(R.string.login_link_no_account_part1))
+
+                            // Parte 2: "Sign Up" (Color Vívido)
+                            withStyle(style = SpanStyle(color = AppVividBlue)) {
+                                append(stringResource(R.string.login_link_no_account_part2))
+                            }
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = AppTextGrey
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(36.dp))
             }

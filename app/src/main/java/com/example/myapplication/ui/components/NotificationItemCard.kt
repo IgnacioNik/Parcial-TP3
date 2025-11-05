@@ -66,7 +66,6 @@ fun NotificationItemCard(item: NotificationItem) {
                 Text(
                     text = item.title,
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
                     color = AppTextDark
                 )
 

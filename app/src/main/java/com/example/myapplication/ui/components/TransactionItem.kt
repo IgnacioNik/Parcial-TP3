@@ -46,7 +46,7 @@ fun TransactionItem(transaction: TransactionEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(IntrinsicSize.Min), // Para los Dividers
+            .height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -58,8 +58,8 @@ fun TransactionItem(transaction: TransactionEntity) {
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(id = transaction.icon), // <-- USA HELPER
-                contentDescription = transaction.title, // <-- USA HELPER
+                painter = painterResource(id = transaction.icon),
+                contentDescription = transaction.title,
                 tint = Color.Unspecified
             )
         }
@@ -72,16 +72,15 @@ fun TransactionItem(transaction: TransactionEntity) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = transaction.title, // <-- USA HELPER
+                text = transaction.title,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = AppTextDark.copy(alpha = 0.9f), // (AppTextDark que usaste)
+                color = AppTextDark,
                 maxLines = 1
             )
             Text(
-                text = transaction.date, // <-- USA HELPER
+                text = transaction.date,
                 style = MaterialTheme.typography.bodySmall,
-                color = AppIconBlueTint, // (Tu color azul)
+                color = AppIconBlueTint,
                 maxLines = 1
             )
         }
@@ -95,10 +94,12 @@ fun TransactionItem(transaction: TransactionEntity) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = transaction.category, // <-- USA HELPER
+                text = transaction.category,
                 style = MaterialTheme.typography.bodySmall,
                 color = AppTextGrey,
-                maxLines = 1
+                maxLines = 1,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         }
 
@@ -111,9 +112,8 @@ fun TransactionItem(transaction: TransactionEntity) {
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(
-                text = formattedAmount, // <-- USA HELPER
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
+                text = formattedAmount,
+                style = MaterialTheme.typography.bodyMedium,
                 // Lógica de color basada en el "type" de la API
                 color = if (transaction.type == "credit") AppTextDark else AppIconBlueTint,
                 maxLines = 1,

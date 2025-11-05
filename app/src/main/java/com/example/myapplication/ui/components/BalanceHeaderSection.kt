@@ -199,7 +199,7 @@ private fun ProgressBarWithText(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .background(AppGreenLight), // Color de fondo (ej: verde claro)
+                .background(AppTextWhite), // Color de fondo (ej: verde claro)
             contentAlignment = Alignment.CenterEnd
         ) {
             Text(

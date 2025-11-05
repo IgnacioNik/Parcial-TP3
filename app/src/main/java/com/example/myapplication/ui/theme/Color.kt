@@ -23,4 +23,4 @@ val AppBackground = Color(0xFFF1FFF3)
 val AppGreenLight = Color(0xFFDFF7E2)
 val AppIconBlueTint = Color(0xFF0068FF)
 
-
+val AppVividBlue = Color(0xFF3299FF)

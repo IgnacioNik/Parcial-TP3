@@ -106,7 +106,8 @@ fun AccountBalanceScreen(
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_income),
                     onClick = { selectedButton = "Income" },
                     modifier = Modifier.weight(1f),
-                    unselectedContentColor = AppGreen
+                    unselectedContentColor = AppGreen,
+                    amountColor = AppTextDark
                 )
                 BalanceToggleButton(
                     text = stringResource(R.string.account_balance_button_expense),
@@ -115,7 +116,8 @@ fun AccountBalanceScreen(
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_expense),
                     onClick = { selectedButton = "Expense" },
                     modifier = Modifier.weight(1f),
-                    unselectedContentColor = AppIconBlueTint
+                    unselectedContentColor = AppIconBlueTint,
+                    amountColor = AppIconBlueTint
                 )
             }
 

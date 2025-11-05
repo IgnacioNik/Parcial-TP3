@@ -107,11 +107,6 @@ fun HomeScreen(
     }
 }
 
-
-// --- EL HEADER Y PROGRESSBAR FUERON MOVIDOS A "ui/components/HomeHeader.kt" ---
-
-
-// --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {

@@ -33,14 +33,17 @@ fun BalanceToggleButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    unselectedContentColor: Color
+    unselectedContentColor: Color,
+    amountColor: Color
 ) {
     val containerColor = if (isSelected) AppIconBlueTint else AppTextWhite
-    val contentColor = if (isSelected) AppTextDark else unselectedContentColor
+    val contentColor = if (isSelected) AppTextWhite else unselectedContentColor
+    val amountColor = if (isSelected) AppTextWhite else amountColor
+    val textColor = if (isSelected) AppTextWhite else AppTextDark
 
     Card(
-        modifier = modifier, // El .weight(1f) de la pantalla le da el ancho
-        shape = RoundedCornerShape(24.dp),
+        modifier = modifier,
+        shape = RoundedCornerShape(24.dp), // Las esquinas están bien
         colors = CardDefaults.cardColors(
             containerColor = containerColor,
             contentColor = contentColor
@@ -48,12 +51,13 @@ fun BalanceToggleButton(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         onClick = onClick
     ) {
-        // VVV ¡CAMBIO DE "Row" A "Column"! VVV
         Column(
             modifier = Modifier
-                .fillMaxWidth() // Ocupa el ancho que le da el .weight(1f)
-                .padding(vertical = 16.dp), // Padding arriba y abajo
-            horizontalAlignment = Alignment.CenterHorizontally, // Centra todo
+                .fillMaxWidth()
+                // --- 1. REDUCE EL PADDING VERTICAL ---
+                // Antes: .padding(vertical = 16.dp)
+                .padding(vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             // 1. Icono (Arriba)
@@ -61,16 +65,20 @@ fun BalanceToggleButton(
                 painter = painterResource(id = iconRes),
                 contentDescription = text,
                 tint = contentColor,
-                modifier = Modifier.size(32.dp)
+                // --- 2. REDUCE EL TAMAÑO DEL ICONO ---
+                // Antes: .size(32.dp)
+                modifier = Modifier.size(24.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp)) // Espacio
+            // --- 3. REDUCE EL ESPACIO ---
+            // Antes: Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // 2. Texto (Medio)
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodySmall,
-                color = AppTextDark
+                color = textColor
             )
 
             // 3. Monto (Abajo)
@@ -78,9 +86,8 @@ fun BalanceToggleButton(
                 text = amount,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = contentColor
+                color = amountColor
             )
         }
-        // ^^^ FIN DEL CAMBIO ^^^
     }
 }

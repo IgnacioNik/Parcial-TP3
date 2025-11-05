@@ -135,7 +135,7 @@ fun SummarySection(summaryState: SummaryUiState) { // <-- 1. ACEPTA EL ESTADO
                             iconRes = R.drawable.ic_revenue_stack,
                             title = stringResource(R.string.home_summary_revenue),
                             amount = "$${"%.2f".format(summaryState.revenueLastWeek)}", // <-- DATO DEL VIEWMODEL
-                            amountColor = AppTextWhite
+                            amountColor = AppTextDark
                         )
 
                         Divider(color = AppTextWhite.copy(alpha = 0.5f), thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))

@@ -139,14 +139,14 @@ fun ProfileScreen(
                     )
 
                     // El texto
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = userName,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = AppTextDark
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(0.dp))
                     Text(
                         text = userId,
                         style = MaterialTheme.typography.bodyMedium,
