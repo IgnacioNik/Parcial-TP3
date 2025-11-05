@@ -48,17 +48,16 @@ import com.example.myapplication.ui.viewmodels.RegisterViewModel
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onBackToLoginClick: () -> Unit,
-    // viewModel: RegisterViewModel = viewModel() // <-- 5. BORRAMOS EL VIEWMODEL DE LA FIRMA
 ) {
 
-    // --- 6. AÑADIMOS LA LÓGICA DE LA FÁBRICA ---
+    // ---  AÑADIMOS LA LÓGICA DE LA FÁBRICA ---
     val context = LocalContext.current
     val application = context.applicationContext as Application
     // Creamos una fábrica que sabe cómo construir AndroidViewModels
     val factory = ViewModelProvider.AndroidViewModelFactory(application)
     // Le pasamos la fábrica al creador del ViewModel
     val viewModel: RegisterViewModel = viewModel(factory = factory)
-    // --- FIN DEL CAMBIO ---
+
 
     val fullName = viewModel.fullName
     val email = viewModel.email
@@ -71,19 +70,14 @@ fun RegisterScreen(
 
     val registerState = viewModel.registerState.collectAsState().value
 
-    // (El resto de tu pantalla se queda exactamente igual)
-    // ...
+
     LaunchedEffect(registerState) {
         when (registerState) {
             is RegisterUiState.Success -> {
-                // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-                // NO: stringResource(R.string.register_toast_success)
-                // SÍ: context.getString(R.string.register_toast_success)
                 Toast.makeText(context, context.getString(R.string.register_toast_success), Toast.LENGTH_SHORT).show()
                 onRegisterSuccess()
             }
             is RegisterUiState.Error -> {
-                // 'registerState.message' ya es un String, así que está bien
                 Toast.makeText(context, registerState.message, Toast.LENGTH_SHORT).show()
                 viewModel.resetErrorState()
             }
@@ -202,10 +196,8 @@ fun RegisterScreen(
                 TextButton(onClick = onBackToLoginClick) {
                     Text(
                         text = buildAnnotatedString {
-                            // Parte 1: "Don't have an account? " (Color por defecto)
                             append(stringResource(R.string.register_link_log_in_par1))
 
-                            // Parte 2: "Sign Up" (Color Vívido)
                             withStyle(style = SpanStyle(color = AppVividBlue)) {
                                 append(stringResource(R.string.register_link_log_in_par2))
                             }

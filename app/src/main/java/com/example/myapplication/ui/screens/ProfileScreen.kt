@@ -46,52 +46,40 @@ import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.viewmodels.HeaderUiState
-import com.example.myapplication.ui.viewmodels.HomeViewModel
+import com.example.myapplication.ui.viewmodels.SharedViewModel
 
 @Composable
 fun ProfileScreen(
     navController: NavController
 ) {
-    // --- 2. OBTÉN EL VIEWMODEL COMPARTIDO ---
+    // --- 3. PIDE EL VIEWMODEL COMPARTIDO "LIVIANO" ---
     val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry(navController.graph.id)
     }
-    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
 
-    // --- 3. "DESENVUELVE" LOS ESTADOS ---
+    val viewModel: SharedViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+
     val isGuest by viewModel.isGuest.collectAsState()
     val headerState by viewModel.headerState.collectAsState()
 
-    // --- 4. LÓGICA DE TEXTO ---
     val defaultUserName = stringResource(R.string.profile_guest_user)
     val defaultUserId = stringResource(R.string.profile_guest_id_na)
 
     var userName = defaultUserName
     var userId = defaultUserId
 
-
     if (headerState is HeaderUiState.Success) {
         val userData = (headerState as HeaderUiState.Success).userData
-
-        // Comprueba si el nombre de la API NO es nulo o blanco
-        userName = if (userData.name.isNullOrBlank()) {
-            defaultUserName // Si lo es, usa el por defecto
-        } else {
-            userData.name // Si no, usa el de la API
-        }
-
-        // Comprueba si el ID de la API NO es nulo, blanco, o el string "null"
+        userName = if (userData.name.isNullOrBlank()) defaultUserName else userData.name
         userId = if (userData.userId.isNullOrEmpty() || userData.userId == "null") {
-            defaultUserId // Si lo es, usa el por defecto
+            defaultUserId
         } else {
-            // Si no, usa el de la API con el formato
             stringResource(R.string.profile_user_id_prefix, userData.userId)
         }
     }
 
-
     val profileImageSize = 120.dp
-    val overlap = 60.dp // Mitad de la imagen
+    val overlap = 60.dp
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -103,13 +91,11 @@ fun ProfileScreen(
                 onNotificationClick = { navController.navigate(Screen.Notification.route) }
             )
 
-            // --- LAYOUT BOX PARA SUPERPONER ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                // --- 1. EL CONTENIDO BLANCO (FONDO) ---
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,7 +111,6 @@ fun ProfileScreen(
                             bottom = 96.dp
                         )
                     ) {
-                        // --- 2. LISTA DE OPCIONES ---
                         items(profileScreenOptions, key = { it.id }) { option ->
                             ProfileMenuItem(
                                 item = option,
@@ -146,7 +131,6 @@ fun ProfileScreen(
                     }
                 }
 
-                // --- 3. HEADER FLOTANTE (IMAGEN + TEXTO) ---
                 Column(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -154,18 +138,14 @@ fun ProfileScreen(
                         .zIndex(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // La imagen
                     Image(
                         painter = painterResource(id = R.drawable.img_profile_placeholder),
-                        // --- 3. CONTENT DESCRIPTION USANDO STRING ---
                         contentDescription = stringResource(R.string.profile_cd_profile_picture),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(profileImageSize)
                             .clip(CircleShape)
                     )
-
-                    // El texto
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = userName,

@@ -38,20 +38,24 @@ import com.example.myapplication.ui.components.CategoryItem
 import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.viewmodels.HomeViewModel
+import com.example.myapplication.ui.viewmodels.SharedViewModel
 
 @Composable
 fun CategoriesScreen(
-    navController: NavController,
+    navController: NavController
 ) {
+    // --- 3. OBTÉN EL VIEWMODEL "LIVIANO" COMPARTIDO ---
     val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry(navController.graph.id)
     }
-    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
-    // 1. CONSUMIMOS LOS ESTADOS
+    val viewModel: SharedViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+
+    // --- 4. OBSERVA LOS ESTADOS ---
     val headerState by viewModel.headerState.collectAsState()
-    val categories by viewModel.categoriesState.collectAsState()
     val isGuest by viewModel.isGuest.collectAsState()
+
+    // --- 5. CARGA LOS DATOS ESTÁTICOS ---
+    val categories = sampleCategories
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -60,21 +64,20 @@ fun CategoriesScreen(
                 .fillMaxSize()
                 .background(AppGreen)
         ) {
-            // 1. Header de la App (Reutilizado)
             AppHeader(
                 title = stringResource(R.string.categories_title),
                 onBackClick = { navController.popBackStack() },
                 onNotificationClick = { navController.navigate(Screen.Notification.route) }
             )
 
-            // 2. Sección de Balance (Reutilizado)
             Column(modifier = Modifier.padding(horizontal = 32.dp).offset(y = (-12).dp)) {
-                BalanceHeaderSection(headerState = headerState)
+                BalanceHeaderSection(
+                    headerState = headerState,
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 3. CONTENIDO BLANCO (con la cuadrícula)
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -82,22 +85,19 @@ fun CategoriesScreen(
                 color = AppBackground,
                 shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
             ) {
-                // Usamos LazyVerticalGrid para la cuadrícula
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
                     modifier = Modifier.fillMaxWidth(),
-
-
                     contentPadding = PaddingValues(
                         start = 32.dp,
                         end = 32.dp,
                         top = 32.dp,
                         bottom = 96.dp
                     ),
-
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    // Usa la lista estática
                     items(categories, key = { it.id }) { category ->
                         CategoryItem(
                             category = category,
@@ -125,7 +125,6 @@ fun CategoriesScreen(
 @Composable
 fun CategoriesScreenPreview() {
     MyApplicationTheme {
-        val previewCategories = sampleCategories
         CategoriesScreen(navController = rememberNavController())
     }
 }

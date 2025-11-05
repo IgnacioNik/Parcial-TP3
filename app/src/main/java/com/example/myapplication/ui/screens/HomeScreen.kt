@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.screens
 
-// VVV ¡IMPORTA TU NUEVO HEADER! VVV
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,8 @@ import com.example.myapplication.ui.components.TransactionTabs
 import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.viewmodels.HomeViewModel
+import com.example.myapplication.ui.viewmodels.SharedViewModel
+import com.example.myapplication.ui.viewmodels.TransactionsViewModel
 
 @Composable
 fun HomeScreen(
@@ -43,23 +43,31 @@ fun HomeScreen(
     onNavigateToNotification: () -> Unit,
     isGuest: Boolean
 ) {
-
+    // --- 2. OBTÉN EL VIEWMODEL "LIVIANO" COMPARTIDO ---
     val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry(navController.graph.id)
     }
-    // Pide el ViewModel que pertenece a ESE dueño
-    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+    val sharedViewModel: SharedViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
 
+    // --- 3. OBTÉN EL VIEWMODEL "PESADO" LOCAL ---
+    val transactionsViewModel: TransactionsViewModel = viewModel()
+
+    // --- 4. ORDÉNALES QUÉ CARGAR ---
     LaunchedEffect(isGuest) {
-        viewModel.loadDataForUser(isGuest)
+
+        sharedViewModel.loadUser(isGuest)
+
+        transactionsViewModel.loadData(isGuest)
     }
 
-    var selectedTab by remember { mutableStateOf(2) } // 2 = "Monthly"
+    var selectedTab by remember { mutableStateOf(2) }
 
-    // OBSERVAMOS LOS ESTADOS DEL VIEWMODEL
-    val headerState by viewModel.headerState.collectAsState()
-    val transactions by viewModel.transactionsState.collectAsState()
-    val summaryState by viewModel.summaryState.collectAsState()
+    // --- 5. OBSERVA LOS ESTADOS DESDE EL VIEWMODEL CORRECTO ---
+    val headerState by sharedViewModel.headerState.collectAsState()
+    val isGuestFromVM by sharedViewModel.isGuest.collectAsState()
+
+    val transactions by transactionsViewModel.transactionsState.collectAsState()
+    val summaryState by transactionsViewModel.summaryState.collectAsState()
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -69,7 +77,6 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(AppGreen)
         ) {
-            // ¡LLAMA AL NUEVO COMPONENTE!
             HomeHeader(
                 onNavigateToNotification = onNavigateToNotification,
                 headerState = headerState
@@ -112,7 +119,7 @@ fun HomeScreen(
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             AppBottomBar(
                 navController = navController,
-                isGuest = isGuest // <-- ¡AQUÍ ESTÁ EL CAMBIO!
+                isGuest = isGuestFromVM
             )
         }
     }

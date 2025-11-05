@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,27 +47,38 @@ import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.viewmodels.HomeViewModel
+import com.example.myapplication.ui.viewmodels.SharedViewModel
 import com.example.myapplication.ui.viewmodels.SummaryUiState
+import com.example.myapplication.ui.viewmodels.TransactionsViewModel
 
 @Composable
 fun AccountBalanceScreen(
-    navController: NavController,
+    navController: NavController
 ) {
+    // --- 2. OBTÉN EL VIEWMODEL "LIVIANO" COMPARTIDO ---
     val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry(navController.graph.id)
     }
-    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
-    // 1. ESTADOS
-    val headerState by viewModel.headerState.collectAsState()
-    val transactions by viewModel.transactionsState.collectAsState()
-    val summaryState by viewModel.summaryState.collectAsState()
+    val sharedViewModel: SharedViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
 
-    val isGuest by viewModel.isGuest.collectAsState()
+    // --- 3. OBTÉN EL VIEWMODEL "PESADO" LOCAL ---
+    val transactionsViewModel: TransactionsViewModel = viewModel()
+
+    // --- 4. OBSERVA LOS ESTADOS DESDE EL VIEWMODEL CORRECTO ---
+    val headerState by sharedViewModel.headerState.collectAsState()
+    val isGuest by sharedViewModel.isGuest.collectAsState()
+
+    val transactions by transactionsViewModel.transactionsState.collectAsState()
+    val summaryState by transactionsViewModel.summaryState.collectAsState()
+
+    // --- 5. ORDEN QUÉ CARGAR  ---
+    LaunchedEffect(isGuest) {
+        transactionsViewModel.loadData(isGuest)
+    }
 
     var selectedButton by remember { mutableStateOf("") }
 
-    // --- LÓGICA REFACTORIZADA ---
+    // --- Lógica de botones  ---
     var incomeAmount = "$0.00"
     var expenseAmount = "$0.00"
     if (summaryState is SummaryUiState.Success) {
@@ -81,16 +93,16 @@ fun AccountBalanceScreen(
                 .fillMaxSize()
                 .background(AppGreen)
         ) {
-            // 1. Header de la App (Flecha, Título, Campana)
             AppHeader(
                 title = stringResource(R.string.header_account_balance),
                 onBackClick = { navController.popBackStack() },
                 onNotificationClick = { navController.navigate(Screen.Notification.route) }
             )
 
-            // 2. Sección de Balance (Tarjetas y Barra de Progreso)
             Column(modifier = Modifier.padding(horizontal = 32.dp).offset(y = (-12).dp)) {
-                BalanceHeaderSection(headerState = headerState)
+                BalanceHeaderSection(
+                    headerState = headerState
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -102,22 +114,26 @@ fun AccountBalanceScreen(
                     .padding(horizontal = 32.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+
+                val incomeText = stringResource(R.string.account_balance_button_income)
+                val expenseText = stringResource(R.string.account_balance_button_expense)
+
                 BalanceToggleButton(
-                    text = stringResource(R.string.account_balance_button_income),
+                    text = incomeText,
                     amount = incomeAmount,
                     iconRes = R.drawable.ic_income,
-                    isSelected = selectedButton == stringResource(R.string.account_balance_button_income),
-                    onClick = { selectedButton = "Income" },
+                    isSelected = selectedButton == incomeText,
+                    onClick = { selectedButton = incomeText },
                     modifier = Modifier.weight(1f),
                     unselectedContentColor = AppGreen,
                     amountColor = AppTextDark
                 )
                 BalanceToggleButton(
-                    text = stringResource(R.string.account_balance_button_expense),
+                    text = expenseText,
                     amount = expenseAmount,
                     iconRes = R.drawable.ic_expense,
-                    isSelected = selectedButton == stringResource(R.string.account_balance_button_expense),
-                    onClick = { selectedButton = "Expense" },
+                    isSelected = selectedButton == expenseText,
+                    onClick = { selectedButton = expenseText },
                     modifier = Modifier.weight(1f),
                     unselectedContentColor = AppIconBlueTint,
                     amountColor = AppIconBlueTint
@@ -141,7 +157,6 @@ fun AccountBalanceScreen(
                         bottom = 96.dp
                     )
                 ) {
-                    // 5. TÍTULO DE LA LISTA
                     item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

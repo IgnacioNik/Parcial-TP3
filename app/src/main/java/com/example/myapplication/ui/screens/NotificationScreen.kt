@@ -35,7 +35,7 @@ import com.example.myapplication.ui.theme.AppBackground
 import com.example.myapplication.ui.theme.AppGreen
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.viewmodels.HomeViewModel
+import com.example.myapplication.ui.viewmodels.SharedViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,7 +45,7 @@ fun NotificationScreen(
     val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
         navController.getBackStackEntry(navController.graph.id)
     }
-    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+    val viewModel: SharedViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
 
     val isGuest by viewModel.isGuest.collectAsState()
     // ---  ¡CONSUME EL ESTADO DEL VIEWMODEL! ---
