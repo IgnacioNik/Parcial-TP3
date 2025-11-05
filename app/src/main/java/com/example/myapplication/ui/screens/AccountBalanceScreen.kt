@@ -53,16 +53,20 @@ import com.example.myapplication.ui.viewmodels.SummaryUiState
 fun AccountBalanceScreen(
     navController: NavController,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
-    val transactions by viewModel.transactionsState.collectAsState() // Esta pantalla sí usa la lista plana
+    val transactions by viewModel.transactionsState.collectAsState()
     val summaryState by viewModel.summaryState.collectAsState()
+
+    val isGuest by viewModel.isGuest.collectAsState()
 
     var selectedButton by remember { mutableStateOf("") }
 
     // --- LÓGICA REFACTORIZADA ---
-    // Ya no formateamos nada aquí. Solo leemos los strings.
     var incomeAmount = "$0.00"
     var expenseAmount = "$0.00"
     if (summaryState is SummaryUiState.Success) {
@@ -85,7 +89,6 @@ fun AccountBalanceScreen(
             )
 
             // 2. Sección de Balance (Tarjetas y Barra de Progreso)
-            // (Mantenemos tus ajustes de layout)
             Column(modifier = Modifier.padding(horizontal = 32.dp).offset(y = (-12).dp)) {
                 BalanceHeaderSection(headerState = headerState)
             }
@@ -101,7 +104,7 @@ fun AccountBalanceScreen(
             ) {
                 BalanceToggleButton(
                     text = stringResource(R.string.account_balance_button_income),
-                    amount = incomeAmount, // <-- Pasa el string limpio
+                    amount = incomeAmount,
                     iconRes = R.drawable.ic_income,
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_income),
                     onClick = { selectedButton = "Income" },
@@ -111,7 +114,7 @@ fun AccountBalanceScreen(
                 )
                 BalanceToggleButton(
                     text = stringResource(R.string.account_balance_button_expense),
-                    amount = expenseAmount, // <-- Pasa el string limpio
+                    amount = expenseAmount,
                     iconRes = R.drawable.ic_expense,
                     isSelected = selectedButton == stringResource(R.string.account_balance_button_expense),
                     onClick = { selectedButton = "Expense" },
@@ -121,7 +124,7 @@ fun AccountBalanceScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp)) // (Manteniendo tu ajuste de altura)
+            Spacer(modifier = Modifier.height(16.dp))
 
             // 4. CONTENIDO BLANCO
             Surface(
@@ -134,7 +137,7 @@ fun AccountBalanceScreen(
                     contentPadding = PaddingValues(
                         start = 32.dp,
                         end = 32.dp,
-                        top = 16.dp, // (Manteniendo tu ajuste de padding)
+                        top = 16.dp,
                         bottom = 96.dp
                     )
                 ) {
@@ -163,7 +166,6 @@ fun AccountBalanceScreen(
                     }
 
                     // 6. LISTA DE TRANSACCIONES
-                    // Esta pantalla usa la lista plana 'transactions', lo cual está bien.
                     items(transactions, key = { it.id }) { transaction ->
                         TransactionItem(transaction)
                         Spacer(modifier = Modifier.height(16.dp))
@@ -175,14 +177,13 @@ fun AccountBalanceScreen(
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             AppBottomBar(
                 navController = navController,
-                isGuest = viewModel.isGuest
+                isGuest = isGuest
             )
         }
     }
 }
 
 
-// --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
 fun AccountBalanceScreenPreview() {

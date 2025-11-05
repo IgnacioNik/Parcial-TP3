@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -47,17 +48,18 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun TransactionsScreen(
     navController: NavController,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
-    // ¡NUEVO! Consume el estado agrupado
     val groupedTransactions by viewModel.groupedTransactionsState.collectAsState()
-    val isGuest = viewModel.isGuest
+    val isGuest by viewModel.isGuest.collectAsState()
 
-    // --- Lógica de balance (¡AHORA ES MUCHO MÁS SIMPLE!) ---
-    var totalBalance = "$0.00" // Valor por defecto
+    // --- Lógica de balance
+    var totalBalance = "$0.00"
     if (headerState is HeaderUiState.Success) {
-        // Simplemente lee el valor, no lo calcules.
         totalBalance = (headerState as HeaderUiState.Success).formattedBalance
     }
 
@@ -77,7 +79,7 @@ fun TransactionsScreen(
 
             // 2. NUEVA TARJETA DE BALANCE
             TotalBalanceCard(
-                balance = totalBalance, // <-- Pasa el String ya formateado
+                balance = totalBalance,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
@@ -113,11 +115,10 @@ fun TransactionsScreen(
 
                         // STICKY HEADER
                         stickyHeader {
-                            ListHeader(text = month) // Usa la Key como título
+                            ListHeader(text = month)
                         }
 
                         // LISTA DE TRANSACCIONES
-                        // 'transactionsInMonth' ya es la lista filtrada por el ViewModel
                         items(transactionsInMonth, key = { it.id }) { transaction ->
                             TransactionItem(transaction)
                             Spacer(modifier = Modifier.height(16.dp))
@@ -148,7 +149,7 @@ private fun ListHeader(text: String) {
         color = AppTextDark,
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppBackground) // Fondo para que no se vea transparente
+            .background(AppBackground)
             .padding(vertical = 8.dp)
     )
 }

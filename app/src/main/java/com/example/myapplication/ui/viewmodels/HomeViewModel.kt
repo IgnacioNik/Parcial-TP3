@@ -4,9 +4,16 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-// --- 1. IMPORTA 'R' ---
 import com.example.myapplication.R
-import com.example.myapplication.data.models.*
+import com.example.myapplication.data.models.BankAccount
+import com.example.myapplication.data.models.Category
+import com.example.myapplication.data.models.CreditCard
+import com.example.myapplication.data.models.NotificationGroup
+import com.example.myapplication.data.models.TransactionEntity
+import com.example.myapplication.data.models.UserResponse
+import com.example.myapplication.data.models.sampleCategories
+import com.example.myapplication.data.models.sampleNotifications
+import com.example.myapplication.data.models.sampleTransactionEntities
 import com.example.myapplication.data.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +21,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 
-// --- DEFINICIONES DE ESTADO (Se quedan igual) ---
+// --- DEFINICIONES DE ESTADO  ---
 sealed class HeaderUiState {
     object Loading : HeaderUiState()
     data class Success(
@@ -35,24 +42,19 @@ sealed class SummaryUiState {
     ) : SummaryUiState()
     data class Error(val message: String) : SummaryUiState()
 }
-// --- FIN DE DEFINICIONES ---
-
 
 class HomeViewModel(
-    application: Application,
-    savedStateHandle: SavedStateHandle
+    application: Application
 ) : AndroidViewModel(application) {
 
-    // --- 2. AÑADE EL CONTEXTO ---
     private val context = application.applicationContext
-
     private val repository: TransactionRepository
-    private val isGuestString: String = savedStateHandle.get<String>("isGuest") ?: "true"
-    val isGuest: Boolean = isGuestString.toBoolean()
-
     private val currencyFormatter = DecimalFormat("$#,##0.00")
 
-    // ... (Todos tus StateFlows se quedan igual)
+    private val _isGuest = MutableStateFlow(true)
+    val isGuest = _isGuest.asStateFlow()
+
+
     private val _headerState = MutableStateFlow<HeaderUiState>(HeaderUiState.Loading)
     val headerState = _headerState.asStateFlow()
     private val _transactionsState = MutableStateFlow<List<TransactionEntity>>(emptyList())
@@ -72,10 +74,23 @@ class HomeViewModel(
         _notificationsState.value = sampleNotifications
         _categoriesState.value = sampleCategories
 
-        if (isGuest) {
+        observeTransactions()
+    }
+
+    /**
+     * HomeScreen llama a esta función UNA VEZ para decirle
+     * al ViewModel qué datos debe cargar (reales o de prueba).
+     */
+    fun loadDataForUser(isGuestArg: Boolean) {
+        if (_isGuest.value == isGuestArg && _headerState.value is HeaderUiState.Success) {
+            return
+        }
+
+        _isGuest.value = isGuestArg
+
+        if (isGuestArg) {
             loadSampleData()
         } else {
-            observeTransactions()
             refreshAllData()
         }
     }
@@ -84,33 +99,32 @@ class HomeViewModel(
      * Carga los datos de prueba (sample) en los StateFlows
      */
     private fun loadSampleData() {
-        // --- 3. USA LOS STRINGS DEL CONTEXTO ---
         val sampleBalance = 7783.00
         _headerState.value = HeaderUiState.Success(
             userData = UserResponse(
                 userId = "guest",
-                name = context.getString(R.string.sample_guest_user), // <-- CAMBIO
+                name = context.getString(R.string.sample_guest_user),
                 email = "guest@email.com",
                 balance = sampleBalance,
                 creditCard = CreditCard(
                     cardNumber = "0000",
-                    cardholderName = context.getString(R.string.sample_guest), // <-- CAMBIO
+                    cardholderName = context.getString(R.string.sample_guest),
                     expirationDate = "12/99", cvv = "123",
                     creditLimit = 20000.00, currentBalance = 6000.0, availableBalance = 7000
                 ),
                 bankAccount = BankAccount(
-                    bankName = context.getString(R.string.sample_guest_bank), // <-- CAMBIO
+                    bankName = context.getString(R.string.sample_guest_bank),
                     accountType = "CVU", cvu = "000",
-                    alias = context.getString(R.string.sample_guest_bank_alias), // <-- CAMBIO
+                    alias = context.getString(R.string.sample_guest_bank_alias),
                     currency = "ARS"
                 )
             ),
             formattedBalance = currencyFormatter.format(sampleBalance)
         )
 
-        // ... (Cargar Transacciones y Summary se queda igual, ya usaban variables)
         _transactionsState.value = sampleTransactionEntities
         _groupedTransactionsState.value = groupAndSortTransactionsByMonth(sampleTransactionEntities)
+
         val sampleRevenue = 4000.00
         val sampleFood = 100.00
         _summaryState.value = SummaryUiState.Success(
@@ -122,9 +136,6 @@ class HomeViewModel(
         )
     }
 
-    /**
-     * Agrupa y ordena las transacciones por mes.
-     */
     private fun groupAndSortTransactionsByMonth(transactions: List<TransactionEntity>): Map<String, List<TransactionEntity>> {
         val monthOrder = mapOf(
             "January" to 1, "February" to 2, "March" to 3, "April" to 4, "May" to 5, "June" to 6,
@@ -133,7 +144,7 @@ class HomeViewModel(
 
         val grouped = transactions.groupBy { transaction ->
             monthOrder.keys.find { transaction.date.contains(it, true) }
-                ?: context.getString(R.string.label_unknown_month) // <-- CAMBIO
+                ?: context.getString(R.string.label_unknown_month)
         }
 
         return grouped.toSortedMap(compareByDescending { month ->
@@ -141,37 +152,31 @@ class HomeViewModel(
         })
     }
 
-
-    /**
-     * Observa la base de datos de Room.
-     */
     private fun observeTransactions() {
         viewModelScope.launch {
             repository.getTransactionsFromDb()
                 .catch { e ->
-                    // --- 4. USA EL STRING DE ERROR ---
                     _summaryState.value = SummaryUiState.Error(
                         context.getString(R.string.home_vm_error_db)
                     )
                     e.printStackTrace()
                 }
                 .collect { transactionsList ->
-                    _transactionsState.value = transactionsList
-                    _groupedTransactionsState.value = groupAndSortTransactionsByMonth(transactionsList)
 
-                    if (!isGuest) {
+                    // Solo actualiza la lista desde la BD si NO eres invitado.
+                    if (!_isGuest.value) {
+                        _transactionsState.value = transactionsList
+                        _groupedTransactionsState.value = groupAndSortTransactionsByMonth(transactionsList)
                         calculateSummary(transactionsList)
                     }
+                    // Si ERES invitado, este bloque se ignora,
+                    // y los datos de 'loadSampleData' se quedan.
                 }
         }
     }
 
-    /**
-     * Calcula los valores de Summary.
-     */
     private fun calculateSummary(transactions: List<TransactionEntity>) {
         try {
-            // ... (lógica de 'revenue' y 'food' se queda igual)
             val revenue = transactions
                 .filter { it.type == "credit" }
                 .sumOf { it.amount }
@@ -188,20 +193,15 @@ class HomeViewModel(
                 formattedExpense = "-${currencyFormatter.format(food)}"
             )
         } catch (e: Exception) {
-            // --- 5. USA EL STRING DE ERROR ---
             _summaryState.value = SummaryUiState.Error(
                 context.getString(R.string.home_vm_error_summary)
             )
         }
     }
 
-    /**
-     * Refresca los datos desde la API.
-     */
     fun refreshAllData() {
         val userId = 1
 
-        // 1. Refrescar Header
         viewModelScope.launch {
             _headerState.value = HeaderUiState.Loading
             try {
@@ -213,19 +213,16 @@ class HomeViewModel(
                         formattedBalance = currencyFormatter.format(user.balance)
                     )
                 } else {
-                    // --- 6. USA EL STRING DE ERROR ---
                     _headerState.value = HeaderUiState.Error(
                         context.getString(R.string.home_vm_error_header)
                     )
                 }
             } catch (e: Exception) {
-                // --- 7. USA EL STRING DE ERROR ---
                 val errorMessage = e.message ?: context.getString(R.string.home_vm_error_unknown_network)
                 _headerState.value = HeaderUiState.Error(errorMessage)
             }
         }
 
-        // 2. Refrescar Transacciones
         viewModelScope.launch {
             try {
                 repository.refreshTransactionsFromApi()

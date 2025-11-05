@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.example.myapplication.ui.theme.AppGreenLight
 import com.example.myapplication.ui.theme.AppIconBlueTint
 import com.example.myapplication.ui.theme.AppTextDark
 import com.example.myapplication.ui.theme.AppTextWhite

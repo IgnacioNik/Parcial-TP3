@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,11 +44,14 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun CategoriesScreen(
     navController: NavController,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
     // 1. CONSUMIMOS LOS ESTADOS
     val headerState by viewModel.headerState.collectAsState()
     val categories by viewModel.categoriesState.collectAsState()
-    val isGuest = viewModel.isGuest
+    val isGuest by viewModel.isGuest.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -58,7 +62,7 @@ fun CategoriesScreen(
         ) {
             // 1. Header de la App (Reutilizado)
             AppHeader(
-                title = stringResource(R.string.categories_title), // (Añade "Categories" a tu strings.xml)
+                title = stringResource(R.string.categories_title),
                 onBackClick = { navController.popBackStack() },
                 onNotificationClick = { navController.navigate(Screen.Notification.route) }
             )
@@ -80,17 +84,17 @@ fun CategoriesScreen(
             ) {
                 // Usamos LazyVerticalGrid para la cuadrícula
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(3), // 3 columnas
+                    columns = GridCells.Fixed(3),
                     modifier = Modifier.fillMaxWidth(),
 
-                    // --- ¡AQUÍ ESTÁ LA SOLUCIÓN! ---
+
                     contentPadding = PaddingValues(
                         start = 32.dp,
                         end = 32.dp,
                         top = 32.dp,
-                        bottom = 96.dp // <-- Padding extra para la barra de navegación
+                        bottom = 96.dp
                     ),
-                    // Espaciado horizontal y vertical entre ítems
+
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -115,24 +119,13 @@ fun CategoriesScreen(
     }
 }
 
-/**
- * Composable privado para CADA ítem de la cuadrícula
- */
-
 
 
 @Preview(showBackground = true)
 @Composable
 fun CategoriesScreenPreview() {
-    // Necesitarás un HomeViewModel de Preview o datos de muestra falsos
-    // Por ahora, lo mostramos así:
     MyApplicationTheme {
-        // Creamos una lista falsa solo para la preview
         val previewCategories = sampleCategories
-
-        // (El preview no puede mostrar el ViewModel,
-        // así que el headerState y el isGuest no funcionarán aquí,
-        // pero la cuadrícula sí se verá)
         CategoriesScreen(navController = rememberNavController())
     }
 }

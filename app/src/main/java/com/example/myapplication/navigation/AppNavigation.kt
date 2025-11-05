@@ -72,11 +72,11 @@ fun AppNavigation() {
             WelcomeScreen(
                 onLoginClick = { navController.navigate(Screen.Login.route) },
                 onRegisterClick = { navController.navigate(Screen.Register.route) }
-                // (No más onGuestClick aquí)
+
             )
         }
 
-        // --- 2. ACTUALIZA LOGIN SCREEN ---
+
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
@@ -93,7 +93,6 @@ fun AppNavigation() {
                 },
                 onForgotPasswordClick = { /* TODO */ },
 
-                // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
                 onSignUpClick = {
                     navController.navigate(Screen.Register.route)
                 },
@@ -101,7 +100,6 @@ fun AppNavigation() {
                 onFacebookprintClick = { /* TODO */ },
                 onGoogleClick = { /* TODO */ },
 
-                // --- ¡AQUÍ ESTÁ LA OTRA CORRECCIÓN! ---
                 onBottomSignUpClick = {
                     navController.navigate(Screen.Register.route)
                 }
@@ -127,12 +125,20 @@ fun AppNavigation() {
             )
         }
 
-        composable(Screen.Home.route) {
+        composable(
+            route = Screen.Home.route,
+            arguments = Screen.Home.arguments
+        ) { backStackEntry ->
+            // Extraemos el argumento 'isGuest' que pasamos desde Login
+            val isGuest = backStackEntry.arguments?.getBoolean("isGuest") ?: true
+
             HomeScreen(
                 navController = navController,
-                onNavigateToNotification = { // <-- PÁSALO AQUÍ
-                    navController.navigate(Screen.Notification.route)}
-                )
+                onNavigateToNotification = {
+                    navController.navigate(Screen.Notification.route)
+                },
+                isGuest = isGuest // <-- Se lo pasamos a HomeScreen
+            )
         }
 
         composable(Screen.Notification.route) {

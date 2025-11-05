@@ -1,17 +1,29 @@
 package com.example.myapplication.ui.screens
 
-import android.app.Application // <-- 1. IMPORTA APPLICATION
+import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext // <-- 2. IMPORTA LOCALCONTEXT
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -19,13 +31,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider // <-- 3. IMPORTA VIEWMODELPROVIDER
-import androidx.lifecycle.viewmodel.compose.viewModel // <-- 4. ASEGÚRATE DE USAR ESTE IMPORT
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.ui.components.PrimaryButton
 import com.example.myapplication.ui.components.RegisterFormField
-import com.example.myapplication.ui.components.TextLinkButton
-import com.example.myapplication.ui.theme.*
+import com.example.myapplication.ui.theme.AppBackground
+import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppTextDark
+import com.example.myapplication.ui.theme.AppTextGrey
+import com.example.myapplication.ui.theme.AppVividBlue
 import com.example.myapplication.ui.viewmodels.RegisterUiState
 import com.example.myapplication.ui.viewmodels.RegisterViewModel
 

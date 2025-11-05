@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,10 +42,13 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun NotificationScreen(
     navController: NavController,
 ) {
-    val viewModel: HomeViewModel = viewModel()
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
 
-    val isGuest = viewModel.isGuest
-    // --- 3. ¡CONSUME EL ESTADO DEL VIEWMODEL! ---
+    val isGuest by viewModel.isGuest.collectAsState()
+    // ---  ¡CONSUME EL ESTADO DEL VIEWMODEL! ---
     val notificationGroups by viewModel.notificationsState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -105,7 +109,6 @@ fun NotificationScreen(
     }
 }
 
-// --- 4. BORRAMOS EL "private fun NotificationHeader" DE AQUÍ ---
 
 
 @Preview(showBackground = true)

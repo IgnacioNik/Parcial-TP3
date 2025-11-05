@@ -1,40 +1,50 @@
 package com.example.myapplication.ui.screens
 
-import android.app.Application // <-- 1. IMPORTA
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext // <-- 2. IMPORTA
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel // <-- 3. IMPORTA
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
-import com.example.myapplication.data.models.ProfileOption
 import com.example.myapplication.data.models.profileScreenOptions
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.components.AppBottomBar
 import com.example.myapplication.ui.components.AppHeader
 import com.example.myapplication.ui.components.ProfileMenuItem
-import com.example.myapplication.ui.theme.*
+import com.example.myapplication.ui.theme.AppBackground
+import com.example.myapplication.ui.theme.AppGreen
+import com.example.myapplication.ui.theme.AppTextDark
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.viewmodels.HeaderUiState
 import com.example.myapplication.ui.viewmodels.HomeViewModel
 
@@ -42,24 +52,43 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun ProfileScreen(
     navController: NavController
 ) {
-    // --- 5. AÑADE LA INYECCIÓN DEL VIEWMODEL AQUÍ ---
-    // La función viewModel() es lo suficientemente inteligente
-    // para proveer TANTO Application como SavedStateHandle a HomeViewModel.
-    // NO se necesita una Factory.
-    val viewModel: HomeViewModel = viewModel()
-    val isGuest = viewModel.isGuest
+    // --- 2. OBTÉN EL VIEWMODEL COMPARTIDO ---
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+
+    // --- 3. "DESENVUELVE" LOS ESTADOS ---
+    val isGuest by viewModel.isGuest.collectAsState()
     val headerState by viewModel.headerState.collectAsState()
 
-    // --- 1. VALORES POR DEFECTO USANDO STRINGS ---
-    var userName = stringResource(R.string.profile_guest_user)
-    var userId = stringResource(R.string.profile_guest_id_na)
+    // --- 4. LÓGICA DE TEXTO ---
+    val defaultUserName = stringResource(R.string.profile_guest_user)
+    val defaultUserId = stringResource(R.string.profile_guest_id_na)
+
+    var userName = defaultUserName
+    var userId = defaultUserId
+
 
     if (headerState is HeaderUiState.Success) {
         val userData = (headerState as HeaderUiState.Success).userData
-        userName = userData.name
-        // --- 2. PREFIJO USANDO STRING CON FORMATO ---
-        userId = stringResource(R.string.profile_user_id_prefix, userData.userId)
+
+        // Comprueba si el nombre de la API NO es nulo o blanco
+        userName = if (userData.name.isNullOrBlank()) {
+            defaultUserName // Si lo es, usa el por defecto
+        } else {
+            userData.name // Si no, usa el de la API
+        }
+
+        // Comprueba si el ID de la API NO es nulo, blanco, o el string "null"
+        userId = if (userData.userId.isNullOrEmpty() || userData.userId == "null") {
+            defaultUserId // Si lo es, usa el por defecto
+        } else {
+            // Si no, usa el de la API con el formato
+            stringResource(R.string.profile_user_id_prefix, userData.userId)
+        }
     }
+
 
     val profileImageSize = 120.dp
     val overlap = 60.dp // Mitad de la imagen
@@ -97,14 +126,12 @@ fun ProfileScreen(
                         )
                     ) {
                         // --- 2. LISTA DE OPCIONES ---
-                        // (Esto ahora funciona porque ProfileMenuItem espera
-                        // un ProfileOption que tiene un 'titleRes' Int)
                         items(profileScreenOptions, key = { it.id }) { option ->
                             ProfileMenuItem(
                                 item = option,
                                 onClick = {
                                     if (option.id == "logout") {
-                                        navController.navigate(Screen.Splash.route) {
+                                        navController.navigate(Screen.Welcome.route) {
                                             popUpTo(navController.graph.id) {
                                                 inclusive = true
                                             }
@@ -165,7 +192,7 @@ fun ProfileScreen(
     }
 }
 
-// --- PREVIEW ---
+
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {

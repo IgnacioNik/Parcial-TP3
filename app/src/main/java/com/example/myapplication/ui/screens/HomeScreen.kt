@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,8 +41,18 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun HomeScreen(
     navController: NavController,
     onNavigateToNotification: () -> Unit,
+    isGuest: Boolean
 ) {
-    val viewModel: HomeViewModel = viewModel()
+
+    val navGraphBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry(navController.graph.id)
+    }
+    // Pide el ViewModel que pertenece a ESE dueño
+    val viewModel: HomeViewModel = viewModel(viewModelStoreOwner = navGraphBackStackEntry)
+
+    LaunchedEffect(isGuest) {
+        viewModel.loadDataForUser(isGuest)
+    }
 
     var selectedTab by remember { mutableStateOf(2) } // 2 = "Monthly"
 
@@ -49,7 +60,7 @@ fun HomeScreen(
     val headerState by viewModel.headerState.collectAsState()
     val transactions by viewModel.transactionsState.collectAsState()
     val summaryState by viewModel.summaryState.collectAsState()
-    val isGuest = viewModel.isGuest
+
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -113,7 +124,8 @@ fun HomeScreenPreview() {
     MyApplicationTheme {
         HomeScreen(
             navController = rememberNavController(),
-            onNavigateToNotification = {}
+            onNavigateToNotification = {},
+            isGuest = true
         )
     }
 }
