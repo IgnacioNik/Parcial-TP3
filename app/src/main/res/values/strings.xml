@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
 
+    <string name="api_key">123456789</string>
+
     <string name="finwise_app_name">FinWise</string>
     <string name="welcome_tagline">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</string>
     <string name="log_in_button">Log In</string>

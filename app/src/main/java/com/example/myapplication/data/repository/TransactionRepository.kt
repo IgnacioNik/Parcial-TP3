@@ -1,6 +1,7 @@
 package com.example.myapplication.data.repository
 
 import android.content.Context
+import androidx.compose.ui.res.stringResource
 import com.example.myapplication.api.ApiService
 import com.example.myapplication.api.RetrofitClient
 import com.example.myapplication.data.local.AppDatabase
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import retrofit2.Response
+import com.example.myapplication.R
 
 /**
  * El Repositorio es la "Fuente Única de Verdad".
@@ -26,7 +28,8 @@ class TransactionRepository(context: Context) {
     private val transactionDao: TransactionDao = db.transactionDao()
 
     // La API Key
-    private val apiKey = "123456789"
+    private val apiKey = context.getString(R.string.api_key)
+
 
     // --- 2. FUNCIÓN PARA EL HEADER (Balance, Gasto) ---
     // (Esta no usa Room, solo llama a la API)
