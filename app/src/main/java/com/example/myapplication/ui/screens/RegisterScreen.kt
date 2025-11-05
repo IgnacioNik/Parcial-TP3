@@ -1,48 +1,27 @@
 package com.example.myapplication.ui.screens
 
+import android.app.Application // <-- 1. IMPORTA APPLICATION
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalContext // <-- 2. IMPORTA LOCALCONTEXT
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider // <-- 3. IMPORTA VIEWMODELPROVIDER
+import androidx.lifecycle.viewmodel.compose.viewModel // <-- 4. ASEGÚRATE DE USAR ESTE IMPORT
 import com.example.myapplication.R
-import com.example.myapplication.ui.components.FormTextField
 import com.example.myapplication.ui.components.PrimaryButton
+import com.example.myapplication.ui.components.RegisterFormField
 import com.example.myapplication.ui.components.TextLinkButton
-import com.example.myapplication.ui.theme.AppBackground
-import com.example.myapplication.ui.theme.AppGreen
-import com.example.myapplication.ui.theme.AppTextDark
-import com.example.myapplication.ui.theme.AppTextGrey
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.ui.theme.*
 import com.example.myapplication.ui.viewmodels.RegisterUiState
 import com.example.myapplication.ui.viewmodels.RegisterViewModel
 
@@ -50,8 +29,17 @@ import com.example.myapplication.ui.viewmodels.RegisterViewModel
 fun RegisterScreen(
     onRegisterSuccess: () -> Unit,
     onBackToLoginClick: () -> Unit,
-    viewModel: RegisterViewModel = viewModel()
+    // viewModel: RegisterViewModel = viewModel() // <-- 5. BORRAMOS EL VIEWMODEL DE LA FIRMA
 ) {
+
+    // --- 6. AÑADIMOS LA LÓGICA DE LA FÁBRICA ---
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    // Creamos una fábrica que sabe cómo construir AndroidViewModels
+    val factory = ViewModelProvider.AndroidViewModelFactory(application)
+    // Le pasamos la fábrica al creador del ViewModel
+    val viewModel: RegisterViewModel = viewModel(factory = factory)
+    // --- FIN DEL CAMBIO ---
 
     val fullName = viewModel.fullName
     val email = viewModel.email
@@ -64,16 +52,19 @@ fun RegisterScreen(
 
     val registerState = viewModel.registerState.collectAsState().value
 
-    val context = LocalContext.current
-
-
+    // (El resto de tu pantalla se queda exactamente igual)
+    // ...
     LaunchedEffect(registerState) {
         when (registerState) {
             is RegisterUiState.Success -> {
-                Toast.makeText(context, "Account created!", Toast.LENGTH_SHORT).show()
+                // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+                // NO: stringResource(R.string.register_toast_success)
+                // SÍ: context.getString(R.string.register_toast_success)
+                Toast.makeText(context, context.getString(R.string.register_toast_success), Toast.LENGTH_SHORT).show()
                 onRegisterSuccess()
             }
             is RegisterUiState.Error -> {
+                // 'registerState.message' ya es un String, así que está bien
                 Toast.makeText(context, registerState.message, Toast.LENGTH_SHORT).show()
                 viewModel.resetErrorState()
             }
@@ -107,8 +98,6 @@ fun RegisterScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-
-
 
                 RegisterFormField(
                     label = stringResource(R.string.register_label_full_name),
@@ -190,52 +179,5 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
-    }
-}
-@Composable
-private fun RegisterFormField(
-    label: String,
-    value: String,
-    placeholder: String,
-    onValueChange: (String) -> Unit,
-    isPassword: Boolean = false,
-    passwordVisible: Boolean = false,
-    onPasswordToggle: () -> Unit = {}
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = AppTextDark,
-            modifier = Modifier.fillMaxWidth().padding(start = 8.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        FormTextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholderText = placeholder,
-            visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
-            trailingIcon = if (isPassword) {
-                {
-                    val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                    IconButton(onClick = onPasswordToggle) {
-                        Icon(imageVector = image, "toggle password")
-                    }
-                }
-            } else { null }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    MyApplicationTheme {
-        RegisterScreen(
-            onRegisterSuccess = {},
-            onBackToLoginClick = {}
-        )
     }
 }

@@ -40,8 +40,9 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 @Composable
 fun NotificationScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel()
 ) {
+    val viewModel: HomeViewModel = viewModel()
+
     val isGuest = viewModel.isGuest
     // --- 3. ¡CONSUME EL ESTADO DEL VIEWMODEL! ---
     val notificationGroups by viewModel.notificationsState.collectAsState()

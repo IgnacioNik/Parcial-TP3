@@ -40,8 +40,9 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 fun HomeScreen(
     navController: NavController,
     onNavigateToNotification: () -> Unit,
-    viewModel: HomeViewModel = viewModel()
 ) {
+    val viewModel: HomeViewModel = viewModel()
+
     var selectedTab by remember { mutableStateOf(2) } // 2 = "Monthly"
 
     // OBSERVAMOS LOS ESTADOS DEL VIEWMODEL

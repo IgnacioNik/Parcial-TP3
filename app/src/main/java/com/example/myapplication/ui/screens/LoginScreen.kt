@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.screens
 
+import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,11 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -31,14 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
-import com.example.myapplication.ui.components.FormTextField
 import com.example.myapplication.ui.components.PrimaryButton
+import com.example.myapplication.ui.components.RegisterFormField
 import com.example.myapplication.ui.components.SecondaryButton
 import com.example.myapplication.ui.components.TextLinkButton
 import com.example.myapplication.ui.theme.AppBackground
@@ -51,25 +47,30 @@ import com.example.myapplication.ui.viewmodels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    // --- 1. ¡CAMBIO EN LA FIRMA! ---
     onLoginSuccess: () -> Unit,
-    onGuestLogin: () -> Unit, // <-- ¡NUEVO!
+    onGuestLogin: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onFacebookprintClick: () -> Unit,
     onGoogleClick: () -> Unit,
-    onBottomSignUpClick: () -> Unit,
-    viewModel: LoginViewModel = viewModel()
+    onBottomSignUpClick: () -> Unit
+    // viewModel: LoginViewModel = viewModel() // <-- 5. BORRAMOS ESTO
 ) {
+
+    // --- 6. AÑADIMOS LA LÓGICA DE LA FÁBRICA ---
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val factory = ViewModelProvider.AndroidViewModelFactory(application)
+    val viewModel: LoginViewModel = viewModel(factory = factory)
+    // --- FIN DEL CAMBIO ---
 
     val email = viewModel.email
     val password = viewModel.password
     val passwordVisible = viewModel.passwordVisible
     val loginState = viewModel.loginState.collectAsState().value
 
-    val context = LocalContext.current
-
-
+    // (El resto de tu pantalla se queda exactamente igual)
+    // ...
     LaunchedEffect(loginState) {
         when (loginState) {
             is LoginUiState.Success -> {
@@ -110,39 +111,21 @@ fun LoginScreen(
             ) {
                 Spacer(modifier = Modifier.height(48.dp))
 
-                Text(
-                    text = stringResource(R.string.login_label_email),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppTextDark,
-                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                FormTextField(
+                RegisterFormField(
+                    label = stringResource(R.string.login_label_email),
                     value = email,
-                    onValueChange = { viewModel.email = it },
-                    placeholderText = stringResource(R.string.login_placeholder_email)
+                    placeholder = stringResource(R.string.login_placeholder_email),
+                    onValueChange = { viewModel.email = it }
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = stringResource(R.string.login_label_password),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppTextDark,
-                    modifier = Modifier.fillMaxWidth().padding(start = 8.dp)
-                )
-                FormTextField(
+                RegisterFormField(
+                    label = stringResource(R.string.login_label_password),
                     value = password,
+                    placeholder = stringResource(R.string.login_placeholder_password),
                     onValueChange = { viewModel.password = it },
-                    placeholderText = stringResource(R.string.login_placeholder_password),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                        val description = if (passwordVisible) stringResource(R.string.login_placeholder_hide_password) else stringResource(R.string.login_placeholder_show_password)
-                        IconButton(onClick = { viewModel.onPasswordVisibilityToggle() }) {
-                            Icon(imageVector = image, description)
-                        }
-                    }
+                    isPassword = true,
+                    passwordVisible = passwordVisible,
+                    onPasswordToggle = { viewModel.onPasswordVisibilityToggle() }
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -232,7 +215,7 @@ fun LoginScreenPreview() {
     MyApplicationTheme {
         LoginScreen(
             onLoginSuccess = {},
-            onGuestLogin = {}, // <-- ¡NUEVO!
+            onGuestLogin = {},
             onForgotPasswordClick = {},
             onSignUpClick = {},
             onFacebookprintClick = {},

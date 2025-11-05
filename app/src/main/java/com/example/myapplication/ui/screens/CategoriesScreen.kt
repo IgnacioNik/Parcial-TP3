@@ -42,8 +42,8 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 @Composable
 fun CategoriesScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel()
 ) {
+    val viewModel: HomeViewModel = viewModel()
     // 1. CONSUMIMOS LOS ESTADOS
     val headerState by viewModel.headerState.collectAsState()
     val categories by viewModel.categoriesState.collectAsState()

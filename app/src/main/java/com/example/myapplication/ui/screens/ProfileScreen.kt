@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.screens
 
+import android.app.Application // <-- 1. IMPORTA
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,16 +17,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext // <-- 2. IMPORTA
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.compose.viewModel // <-- 3. IMPORTA
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
+import com.example.myapplication.data.models.ProfileOption
 import com.example.myapplication.data.models.profileScreenOptions
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.ui.components.AppBottomBar
@@ -36,19 +40,25 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavController,
-    viewModel: HomeViewModel = viewModel()
+    navController: NavController
 ) {
+    // --- 5. AÑADE LA INYECCIÓN DEL VIEWMODEL AQUÍ ---
+    // La función viewModel() es lo suficientemente inteligente
+    // para proveer TANTO Application como SavedStateHandle a HomeViewModel.
+    // NO se necesita una Factory.
+    val viewModel: HomeViewModel = viewModel()
     val isGuest = viewModel.isGuest
     val headerState by viewModel.headerState.collectAsState()
 
-    var userName = "Guest User"
-    var userId = "ID: N/A"
+    // --- 1. VALORES POR DEFECTO USANDO STRINGS ---
+    var userName = stringResource(R.string.profile_guest_user)
+    var userId = stringResource(R.string.profile_guest_id_na)
 
     if (headerState is HeaderUiState.Success) {
         val userData = (headerState as HeaderUiState.Success).userData
         userName = userData.name
-        userId = "ID: ${userData.userId}"
+        // --- 2. PREFIJO USANDO STRING CON FORMATO ---
+        userId = stringResource(R.string.profile_user_id_prefix, userData.userId)
     }
 
     val profileImageSize = 120.dp
@@ -81,14 +91,14 @@ fun ProfileScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        // Padding para la barra de navegación Y el header flotante
                         contentPadding = PaddingValues(
-                            top = overlap + 80.dp, // 60dp (foto) + 80dp (texto y spacers)
+                            top = overlap + 80.dp,
                             bottom = 96.dp
                         )
                     ) {
                         // --- 2. LISTA DE OPCIONES ---
-                        // (Lee desde la lista 'profileScreenOptions' importada)
+                        // (Esto ahora funciona porque ProfileMenuItem espera
+                        // un ProfileOption que tiene un 'titleRes' Int)
                         items(profileScreenOptions, key = { it.id }) { option ->
                             ProfileMenuItem(
                                 item = option,
@@ -114,13 +124,14 @@ fun ProfileScreen(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .fillMaxWidth()
-                        .zIndex(1f), // Se dibuja encima de la lista
+                        .zIndex(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // La imagen
                     Image(
                         painter = painterResource(id = R.drawable.img_profile_placeholder),
-                        contentDescription = "Profile Picture",
+                        // --- 3. CONTENT DESCRIPTION USANDO STRING ---
+                        contentDescription = stringResource(R.string.profile_cd_profile_picture),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(profileImageSize)
@@ -154,6 +165,7 @@ fun ProfileScreen(
     }
 }
 
+// --- PREVIEW ---
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {

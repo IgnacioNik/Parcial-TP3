@@ -22,8 +22,6 @@
     <string name="login_welcome_title">Welcome</string>
     <string name="login_label_email">Username or Email</string>
     <string name="login_label_password">Password</string>
-    <string name="login_placeholder_hide_password">Hide password</string>
-    <string name="login_placeholder_show_password">Show password</string>
     <string name="login_toast_fill_fields">Please fill all fields</string>
     <string name="login_link_no_account">Don\'t have an account? Sign Up</string>
     <string name="login_use_fingerprint">Use Fingerprint To Access</string>
@@ -32,6 +30,9 @@
     <string name="login_icon_desc_google">Sign in with Google</string>
     <string name="login_placeholder_email">example@example.com</string>
     <string name="login_placeholder_password">••••••••</string>
+    <string name="login_error_invalid_credentials">Invalid credentials</string>
+    <string name="login_error_network">Network error: %1$s</string>
+    <string name="login_error_unknown">An unknown error occurred</string>
 
     <string name="register_title">Create Account</string>
     <string name="register_label_full_name">Full Name</string>
@@ -43,6 +44,15 @@
     <string name="register_label_confirm_password">Confirm Password</string>
     <string name="register_legal_text">By continuing, you agree to Terms of Use and Privacy Policy.</string>
     <string name="register_link_log_in">Already have an account? Log In</string>
+    <string name="register_toast_success">Account created!</string>
+    <string name="register_error_all_fields">Please fill all fields</string>
+    <string name="register_error_passwords_no_match">Passwords do not match</string>
+    <string name="register_error_api_failed">Registration failed: %1$s</string>
+    <string name="register_error_network">Network error: %1$s</string>
+    <string name="register_error_unknown">An unknown error occurred</string>
+
+    <string name="cd_toggle_password">Toggle password visibility</string>
+
 
     <string name="home_welcome">Hi, Welcome Back</string>
     <string name="home_total_balance">Total Balance</string>
@@ -74,6 +84,18 @@
     <string name="home_amount_revenue">$4,000.00</string>
     <string name="home_amount_food">-$100.00</string>
 
+    <string name="home_vm_error_db">Error reading database</string>
+    <string name="home_vm_error_summary">Summary calculation failed</string>
+    <string name="home_vm_error_header">Failed to load header data</string>
+    <string name="home_vm_error_unknown_network">Unknown error</string>
+
+    <!-- Strings para HomeViewModel (Datos de Muestra) -->
+    <string name="sample_guest_user">Guest User</string>
+    <string name="sample_guest">Guest</string>
+    <string name="sample_guest_bank">Guest Bank</string>
+    <string name="sample_guest_bank_alias">guest.bank</string>
+    <string name="label_unknown_month">Unknown</string>
+
     <string name="nav_desc_home">Home</string>
     <string name="nav_desc_balance">Balance</string>
     <string name="nav_desc_transactions">Transactions</string>
@@ -97,5 +119,14 @@
     <string name="categories_title">Categories</string>
 
     <string name="profile_title">Profile</string>
+    <string name="profile_guest_user">Guest User</string>
+    <string name="profile_guest_id_na">ID: N/A</string>
+    <string name="profile_user_id_prefix">ID: %1$s</string>
+    <string name="profile_cd_profile_picture">Profile Picture</string>
+    <string name="profile_menu_edit">Edit Profile</string>
+    <string name="profile_menu_security">Security</string>
+    <string name="profile_menu_setting">Setting</string>
+    <string name="profile_menu_help">Help</string>
+    <string name="profile_menu_logout">Logout</string>
 
 </resources>

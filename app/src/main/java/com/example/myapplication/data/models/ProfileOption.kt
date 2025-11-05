@@ -1,49 +1,47 @@
 package com.example.myapplication.data.models
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes // <-- 1. IMPORTA ESTO
 import com.example.myapplication.R
 
 /**
  * Define la estructura de datos (el "contrato")
  * para una opción del menú de perfil.
- * Es pública para que los componentes la puedan usar.
  */
 data class ProfileOption(
     val id: String,
-    val title: String,
+    @StringRes val titleRes: Int, // <-- 2. CAMBIADO DE 'title: String'
     @DrawableRes val iconRes: Int
 )
 
 /**
  * Datos estáticos (hardcodeados) para la pantalla de Perfil.
- *
- * Es 'internal' (visible solo dentro de este módulo de la app)
- * y es importado directamente por 'ProfileScreen'.
  */
 internal val profileScreenOptions = listOf(
+    // --- 3. CAMBIADO A REFERENCIAS DE STRING ---
     ProfileOption(
         id = "edit_profile",
-        title = "Edit Profile",
+        titleRes = R.string.profile_menu_edit,
         iconRes = R.drawable.ic_profile_user
     ),
     ProfileOption(
         id = "security",
-        title = "Security",
+        titleRes = R.string.profile_menu_security,
         iconRes = R.drawable.ic_profile_security
     ),
     ProfileOption(
         id = "setting",
-        title = "Setting",
+        titleRes = R.string.profile_menu_setting,
         iconRes = R.drawable.ic_profile_setting
     ),
     ProfileOption(
         id = "help",
-        title = "Help",
+        titleRes = R.string.profile_menu_help,
         iconRes = R.drawable.ic_profile_help
     ),
     ProfileOption(
         id = "logout",
-        title = "Logout",
+        titleRes = R.string.profile_menu_logout,
         iconRes = R.drawable.ic_profile_logout
     )
 )

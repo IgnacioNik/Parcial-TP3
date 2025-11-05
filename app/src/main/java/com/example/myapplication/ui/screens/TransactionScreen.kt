@@ -46,8 +46,8 @@ import com.example.myapplication.ui.viewmodels.HomeViewModel
 @Composable
 fun TransactionsScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel() // Reusa el ViewModel
 ) {
+    val viewModel: HomeViewModel = viewModel()
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
     // ¡NUEVO! Consume el estado agrupado

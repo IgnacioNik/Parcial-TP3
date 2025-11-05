@@ -52,8 +52,8 @@ import com.example.myapplication.ui.viewmodels.SummaryUiState
 @Composable
 fun AccountBalanceScreen(
     navController: NavController,
-    viewModel: HomeViewModel = viewModel() // Reusa el ViewModel
 ) {
+    val viewModel: HomeViewModel = viewModel()
     // 1. ESTADOS
     val headerState by viewModel.headerState.collectAsState()
     val transactions by viewModel.transactionsState.collectAsState() // Esta pantalla sí usa la lista plana

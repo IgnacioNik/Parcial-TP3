@@ -1,12 +1,14 @@
 package com.example.myapplication.ui.viewmodels
 
+import android.app.Application // <-- 1. IMPORTA APPLICATION
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel // <-- 2. CAMBIA ESTO
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.R // <-- 3. IMPORTA R
 import com.example.myapplication.api.RetrofitClient
-import com.example.myapplication.data.models.RegisterRequest
+import com.example.myapplication.data.models.RegisterRequest // (Asumo que esta es tu ruta)
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,8 +21,11 @@ sealed class RegisterUiState {
     data class Error(val message: String) : RegisterUiState()
 }
 
-class RegisterViewModel : ViewModel() {
+// --- 4. CAMBIO EN LA FIRMA DE LA CLASE ---
+class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
+    // Guarda el contexto para usarlo al buscar strings
+    private val context = application.applicationContext
 
     var fullName by mutableStateOf("")
     var email by mutableStateOf("")
@@ -47,37 +52,44 @@ class RegisterViewModel : ViewModel() {
     fun register() {
         if (_registerState.value == RegisterUiState.Loading) return
 
-
+        // --- 5. CAMBIOS DE STRINGS ---
         if (fullName.isBlank() || email.isBlank() || mobile.isBlank() || dob.isBlank() || password.isBlank()) {
-            _registerState.value = RegisterUiState.Error("Please fill all fields")
+            _registerState.value = RegisterUiState.Error(
+                context.getString(R.string.register_error_all_fields)
+            )
             return
         }
         if (password != confirmPassword) {
-            _registerState.value = RegisterUiState.Error("Passwords do not match")
+            _registerState.value = RegisterUiState.Error(
+                context.getString(R.string.register_error_passwords_no_match)
+            )
             return
         }
-
-
 
         _registerState.value = RegisterUiState.Loading
         viewModelScope.launch {
             try {
                 val request = RegisterRequest(fullName, email, mobile, dob, password)
-                val apiKey = "123456789" // La API key de la consigna [cite: 142]
+                val apiKey = "123456789"
 
                 val response = RetrofitClient.instance.register(apiKey, request)
 
                 if (response.isSuccessful && response.body() != null) {
                     _registerState.value = RegisterUiState.Success
                 } else {
-                    _registerState.value = RegisterUiState.Error("Registration failed: ${response.message()}")
+                    val errorMessage = response.message() ?: context.getString(R.string.register_error_unknown)
+                    _registerState.value = RegisterUiState.Error(
+                        context.getString(R.string.register_error_api_failed, errorMessage)
+                    )
                 }
             } catch (e: Exception) {
-                _registerState.value = RegisterUiState.Error("Network error: ${e.message}")
+                val errorMessage = e.message ?: context.getString(R.string.register_error_unknown)
+                _registerState.value = RegisterUiState.Error(
+                    context.getString(R.string.register_error_network, errorMessage)
+                )
             }
         }
     }
-
 
     fun resetErrorState() {
         _registerState.value = RegisterUiState.Idle

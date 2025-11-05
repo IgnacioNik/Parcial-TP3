@@ -91,11 +91,20 @@ fun AppNavigation() {
                         popUpTo(Screen.Welcome.route) { inclusive = true }
                     }
                 },
-                onForgotPasswordClick = { /* ... */ },
-                onSignUpClick = { /* ... */ },
-                onFacebookprintClick = { /* ... */ },
-                onGoogleClick = { /* ... */ },
-                onBottomSignUpClick = { /* ... */ }
+                onForgotPasswordClick = { /* TODO */ },
+
+                // --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
+                onSignUpClick = {
+                    navController.navigate(Screen.Register.route)
+                },
+
+                onFacebookprintClick = { /* TODO */ },
+                onGoogleClick = { /* TODO */ },
+
+                // --- ¡AQUÍ ESTÁ LA OTRA CORRECCIÓN! ---
+                onBottomSignUpClick = {
+                    navController.navigate(Screen.Register.route)
+                }
             )
         }
 
